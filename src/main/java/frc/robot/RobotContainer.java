@@ -14,11 +14,15 @@ public class RobotContainer {
 
   CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
+  public static final m_arm = new Arm(ArmConstants.kArmConstants);
+
   public RobotContainer() {
     configureBindings();
   }
 
-  private void configureBindings() {}
+  private void configureBindings() {
+
+  }
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");

@@ -50,6 +50,7 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
     m_pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, m_constants.kDefaultSlot);
     m_pidController.setSmartMotionMaxAccel(m_constants.kMaxAcceleration, m_constants.kDefaultSlot);
     m_pidController.setSmartMotionMaxVelocity(m_constants.kMaxVelocity, m_constants.kDefaultSlot);
+    m_pidController.setSmartMotionAllowedClosedLoopError(m_constants.kSmartMotionTolerance, m_constants.kDefaultSlot)
 
     m_currentState = m_constants.kinitialState;
     m_currentState = m_constants.kinitialState;
@@ -59,6 +60,32 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
 
   public abstract void runToSetpoint();
 
+  public abstract void manualControl(double throttle, double multiplier, SubsystemState manualState) {
+    m_desiredState = manualState;
+    m_currentState = manualState;
+
+    manualState.setPosition(m_desiredState.getPosition() + throttle * multiplier)
+  }
+
+  public void setState(SubsystemState desiredState) {
+    m_desiredState = desiredState;
+  }
+
+  public boolean atSetpoint() {
+    return Math.abs(m_desiredState.getPosition() - m_encoder.getPosition()) < m_constants.kSetpointTolerance;
+  }
+
+  @Override
+  public void periodic() {
+    outputTelemetry();
+    runToSetpoint();
+
+    if (atSetpoint()) {
+      m_currentState = m_desiredState;
+    }
+
+  }
+
   public static class ServoMotorSubsystemConstants {
     public String kName = "ERROR_ASSIGN_A_NAME";
 
@@ -66,23 +93,28 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
     public CANSparkMaxConstants[] kSlaveConstants = new CANSparkMaxConstants[0];
 
     public double kHomePosition = 0.0;
-    public double kRotationsPerUnitDistance = 1.0;
+    public double kRotationsPerUnitDistance = 1.0; // To find degrees: 360/gear ration ex 360/100 for 100:1
 
+    // PID Constants
     public double kKp = 0.0;
     public double kKi = 0.0;
     public double kKd = 0.0;
-    public double kTolerance = 0.0;
 
-    public int kDefaultSlot = 0;
+    public double kSetpointTolerance = 0.0; // Tolerance for atSetpoint() 
+    public double kSmartMotionTolerance = 0.0; // Tolerance for pid smart motion (Stops ocilation)
 
-    public double kMaxVelocity = 0.0;
-    public double kMaxAcceleration = 0.0;
+    public int kDefaultSlot = 0; // PID Slot, make more if more than one set of pid constants are used
 
+    public double kMaxVelocity = 0.0; // Max velocity for smart motion
+    public double kMaxAcceleration = 0.0; // Max acceleration for smart motion
+
+    // Feedforward constants
     public double kKs = 0.0;
     public double kKg = 0.0;
     public double kKv = 0.0;
     public double kKa = 0.0;
 
+    // Max/Min positions the subsystem should be able to move
     public double kMaxPosition = Double.POSITIVE_INFINITY;
     public double kMinPosition = Double.NEGATIVE_INFINITY;
 
@@ -93,13 +125,15 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
     public int kID = 0;
     public IdleMode kIdleMode = IdleMode.kBrake;
     public MotorType kMotorType = MotorType.kBrushless;
-    public int kCurrentLimit;
+    public int kCurrentLimit = 0;
   }
 
   public interface SubsystemState {
     double getPosition();
 
-    String getNames();
+    String getName();
+
+    void setPosition(double position);
   }
 
 }

@@ -25,5 +25,36 @@ public class Arm extends ServoMotorSubsystem {
     public void runToSetpoint() {
         m_pidController.setReference(m_desiredState.getPosition(), ControlType.kSmartMotion, m_constants.kDefaultSlot, m_feedforward.calculate(0, 0, 0), ArbFFUnits.kVoltage);
     }
+
+    public enum ArmState implements SubsystemState {
+        MANUAL(0, "Manual")
+        HOME(0, "Home"),
+        OUT(100, "Out"),
+        IN(20, "In");
+
+        private double position;
+        private String name;
+
+        public ArmState(double position, String name) {
+            this.position = position;
+            this.name = name;
+        }
+
+        @Override
+        public double getPosition() {
+            return position;
+        }
+
+        @Override
+        public void setPosition(double position) {
+            this.position = position;
+        }
+
+        @Override
+        public String getName() {
+            return name
+        }
+
+    }
     
 }
