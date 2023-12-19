@@ -1,6 +1,6 @@
-package frc.robot.util;
+package frc.robot.subsystems.manager;
 
-public class MechanismStateManager {
+public class SubsystemStateManager {
 
     private SuperstructureState m_currentState;
     private SuperstructureState m_desiredState;
@@ -16,7 +16,7 @@ public class MechanismStateManager {
         PLACE
     }
 
-    public MechanismStateManager(SuperstructureState initialState) {
+    public SubsystemStateManager(SuperstructureState initialState) {
         m_currentState = initialState;
         m_desiredState = initialState;
     }
