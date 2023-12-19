@@ -6,19 +6,36 @@ public class SubsystemStateManager {
     private SuperstructureState m_desiredState;
 
     // Declare subsystems here
-    
+    private Arm m_arm;
 
 
     // Example states
     public enum SuperstructureState {
-        STOW,
+        HOME({ArmState.HOME}, ),
         PICKUP,
-        PLACE
+        PLACE;
+
+        SubsystemState[] subsystemStates;
+        double String name;
+
+        public SuperstructureState(SubsystemState[] subsystemStates, String name) {
+            this.subsystemStates = subsystemStates;
+            this.name = name;
+        }
+
+        public SubsystemState[] getSubsystemStates() {
+            return subsystemStates;
+        }
+
+        public getName() {
+            return name;
+        }
     }
 
-    public SubsystemStateManager(SuperstructureState initialState) {
+    public SubsystemStateManager(SuperstructureState initialState, Arm arm) {
         m_currentState = initialState;
         m_desiredState = initialState;
+        m_arm = arm;
     }
 
     public void setDesiredState(SuperstructureState desiredState) {

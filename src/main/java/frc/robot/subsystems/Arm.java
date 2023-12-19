@@ -27,7 +27,7 @@ public class Arm extends ServoMotorSubsystem {
     }
 
     public enum ArmState implements SubsystemState {
-        MANUAL(0, "Manual")
+        MANUAL(0, "Manual"),
         HOME(0, "Home"),
         OUT(100, "Out"),
         IN(20, "In");
