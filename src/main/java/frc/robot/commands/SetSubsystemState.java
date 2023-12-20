@@ -13,10 +13,20 @@ public class SetSubsystemState extends Command {
   private ServoMotorSubsystem m_subsystem;
 
   private SubsystemState m_state;
+  private SuperstructureState m_superStructureState;
 
   public SetSubsystemState(ServoMotorSubsystem subsystem, SubsystemState state) {
     m_subsystem = subsystem;
     m_state = state;
+    m_superStructureState = null;
+
+    addRequirements(m_subsystem);
+  }
+
+  public SetSubsystemState(ServoMotorSubsystem subsystem, SuperstructureState superStructureState) {
+    m_subsystem = subsystem;
+    m_superStructureState = superStructureState;
+    m_state = null;
 
     addRequirements(m_subsystem);
   }
@@ -24,7 +34,25 @@ public class SetSubsystemState extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.setState(m_state);
+    if (m_superStructureState == null) {
+      m_subsystem.setState(m_state);
+    } else if (m_state == null) {
+      switch (m_subsystem.getSubsystemType()) {
+        case SubsystemType.ARM:
+          m_subsystem.setState(m_superStructureState.getArmState());
+          break;
+        case SubsystemType.ELEVATOR:
+          m_subsystem.setState(m_superStructureState.getElevatorState());
+          break;
+        case SubsystemType.WRIST:
+          m_subsystem.setState(m_superStructureState.getWristState());
+          break;
+        default:
+          break;
+      }
+      
+    }
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
