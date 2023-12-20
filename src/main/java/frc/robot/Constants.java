@@ -49,7 +49,7 @@ public class Constants {
 
             kArmConstants.kDefaultSlot = 0;
 
-            kArmConstants.kMaxVelocity = .005;
+            kArmConstants.kMaxVelocity = .01;
             kArmConstants.kMaxAcceleration = .005;
 
             kArmConstants.kKs = 0.0;

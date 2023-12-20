@@ -24,6 +24,7 @@ public class Arm extends ServoMotorSubsystem {
     public void outputTelemetry() {
         SmartDashboard.putNumber("Desired Position", m_setpoint.position);
         SmartDashboard.putNumber("Position", m_simPosition);
+        SmartDashboard.putNumber("Velocity", m_setpoint.velocity);
     }
 
     @Override
@@ -36,7 +37,7 @@ public class Arm extends ServoMotorSubsystem {
         m_setpoint = m_profile.calculate(Timer.getFPGATimestamp() - m_profileStartTime, new TrapezoidProfile.State(m_desiredState.getPosition(), 0), new TrapezoidProfile.State(m_setpoint.position, m_setpoint.velocity));
 
         if (RobotBase.isReal()) {
-            m_pidController.setReference(m_setpoint.position, ControlType.kPosition, m_constants.kDefaultSlot, m_feedforward.calculate(Math.toRadians(m_setpoint.position), Math.toRadians(m_setpoint.velocity)), ArbFFUnits.kVoltage);
+            m_pidController.setReference(m_setpoint.position, ControlType.kPosition, m_constants.kDefaultSlot, m_feedforward.calculate(Math.toRadians(getPosition()), Math.toRadians(m_setpoint.velocity)), ArbFFUnits.kVoltage);
         } else {
             m_simPosition = m_setpoint.position;
         }
