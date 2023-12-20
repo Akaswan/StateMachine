@@ -63,4 +63,57 @@ public class Constants {
             kArmConstants.kinitialState = ArmState.HOME;
         }
     }
+
+    public static final class ElevatorConstants {
+
+        public static final CANSparkMaxConstants kElevatorMasterConstants = new CANSparkMaxConstants();
+        static {
+            kElevatorMasterConstants.kID = 6;
+            kElevatorMasterConstants.kIdleMode = IdleMode.kBrake;
+            kElevatorMasterConstants.kMotorType = MotorType.kBrushless;
+            kElevatorMasterConstants.kCurrentLimit = 80;
+        }
+
+        public static final CANSparkMaxConstants[] kElevatorSlaveConstants = new CANSparkMaxConstants[1];
+        static {
+            kElevatorSlaveConstants[0] = new CANSparkMaxConstants();
+            kElevatorSlaveConstants[0].kID = 16;
+            kElevatorSlaveConstants[0].kIdleMode = IdleMode.kBrake;
+            kElevatorSlaveConstants[0].kMotorType = MotorType.kBrushless;
+            kElevatorSlaveConstants[0].kCurrentLimit = 80;
+        }
+
+        public static final ServoMotorSubsystemConstants kElevatorConstants = new ServoMotorSubsystemConstants();
+        static {
+            kElevatorConstants.kName = "Elevator";
+
+            kElevatorConstants.kMasterConstants = kArmMasterConstants;
+            kElevatorConstants.kSlaveConstants = kArmSlaveConstants;
+
+            kElevatorConstants.kHomePosition = 0.0;
+            kElevatorConstants.kRotationsPerUnitDistance = 360 / 100;
+
+            kElevatorConstants.kKp = 0.2;
+            kElevatorConstants.kKi = 0.0;
+            kElevatorConstants.kKd = 0.0;
+            kElevatorConstants.kSetpointTolerance = 0.25; 
+            kElevatorConstants.kSmartMotionTolerance = 0.25;
+
+            kElevatorConstants.kDefaultSlot = 0;
+
+            kElevatorConstants.kMaxVelocity = .01;
+            kElevatorConstants.kMaxAcceleration = .005;
+
+            kElevatorConstants.kKs = 0.0;
+            kElevatorConstants.kKg = 0.0;
+            kElevatorConstants.kKv = 0.0;
+            kElevatorConstants.kKa = 0.0;
+
+            kElevatorConstants.kMaxPosition = 500.0;
+            kElevatorConstants.kMinPosition = 0.0;
+
+            kElevatorConstants.kinitialState = ArmState.HOME;
+        }
+    }
+
 }

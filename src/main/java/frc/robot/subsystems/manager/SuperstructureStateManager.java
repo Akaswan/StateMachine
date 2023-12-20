@@ -14,6 +14,7 @@ public class SuperstructureStateManager {
 
     // Declare subsystems here
 
+    private SubsystemStateContainer m_subsystems;
 
     // Example states
     public enum SuperstructureState {
@@ -33,12 +34,24 @@ public class SuperstructureStateManager {
             return subsystemStates;
         }
 
+        public SubsystemState getArmState() {
+            return subsystemStates.getArmState()
+        }
+
+        public SubsystemState getElevatorState() {
+            return subsystemStates.getElevatorState()
+        }
+
+        public SubsystemState getWristState() {
+            return subsystemStates.getWristState()
+        }
+
         public String getName() {
             return name;
         }
     }
 
-    public SuperstructureStateManager(SuperstructureState initialState, Arm arm) {
+    public SuperstructureStateManager(SuperstructureState initialState) {
         m_currentState = initialState;
         m_desiredState = initialState;
     }
@@ -47,10 +60,13 @@ public class SuperstructureStateManager {
         m_desiredState = desiredState;
     }
 
-    public static SequentialCommandGroup goToState(int[] order, SuperstructureState desiredState) {
+    public SequentialCommandGroup goToState(ServoMotorSubsystem[] order, SuperstructureState desiredState) {
         SequentialCommandGroup goToStateCommand = new SequentialCommandGroup();
 
-        goToStateCommand.addCommands(new SetSubsystemState(null, null));
+        for (int i = 0; i < order.length; i++) {
+            goToStateCommand.addCommands(new SetSubsystemState(order[i], desiredState))
+        }
+        
 
         return goToStateCommand;
     }

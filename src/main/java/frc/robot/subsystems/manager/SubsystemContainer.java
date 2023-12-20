@@ -29,6 +29,23 @@ public class SubsystemContainer {
         return m_elevator;
     }
 
+    public ServoMotorSubsystem getType(SubsystemType type) {
+        switch (type) {
+            case SubsystemType.ARM:
+                return m_arm;
+                break;
+            case SubsystemType.ELEVATOR:
+                return m_elevator;
+                break;
+            case SubsystemType.WRIST:
+                return m_wrist;
+                break;
+            default:
+                return null;
+                break;
+        }
+    }
+
     public ServoMotorSubsystem[] getArray() {
         return new ServoMotorSubsystem[] {m_arm, m_wrist, m_elevator};
     }
