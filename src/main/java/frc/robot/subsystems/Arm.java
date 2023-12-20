@@ -34,7 +34,8 @@ public class Arm extends ServoMotorSubsystem {
 
     @Override
     public void runToSetpoint() {
-        m_setpoint = m_profile.calculate(Timer.getFPGATimestamp() - m_profileStartTime, new TrapezoidProfile.State(m_desiredState.getPosition(), 0), new TrapezoidProfile.State(m_setpoint.position, m_setpoint.velocity));
+
+        m_setpoint = m_profile.calculate(Timer.getFPGATimestamp() - m_profileStartTime, new TrapezoidProfile.State(m_desiredState.getPosition(), 0), new TrapezoidProfile.State(m_currentState.getPosition(), 0));
 
         if (RobotBase.isReal()) {
             m_pidController.setReference(m_setpoint.position, ControlType.kPosition, m_constants.kDefaultSlot, m_feedforward.calculate(Math.toRadians(getPosition()), Math.toRadians(m_setpoint.velocity)), ArbFFUnits.kVoltage);
@@ -42,7 +43,7 @@ public class Arm extends ServoMotorSubsystem {
             m_simPosition = m_setpoint.position;
         }
 
-        // if (m_setpoint.position == m_desiredState.getPosition()) m_profileStartTime = -1;
+        if (m_setpoint.position == m_desiredState.getPosition()) m_profileStartTime = -1;
     }
 
     @Override

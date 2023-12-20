@@ -105,8 +105,10 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
 
     if (m_profileStartTime == -1) {
       holdPosition();
+      System.out.println("Holding");
     } else {
       runToSetpoint();
+      System.out.println("MOVING");
     }
     
     if (atSetpoint() && m_currentState != m_desiredState) {
