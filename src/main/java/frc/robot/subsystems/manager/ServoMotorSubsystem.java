@@ -50,7 +50,7 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
     m_pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, m_constants.kDefaultSlot);
     m_pidController.setSmartMotionMaxAccel(m_constants.kMaxAcceleration, m_constants.kDefaultSlot);
     m_pidController.setSmartMotionMaxVelocity(m_constants.kMaxVelocity, m_constants.kDefaultSlot);
-    m_pidController.setSmartMotionAllowedClosedLoopError(m_constants.kSmartMotionTolerance, m_constants.kDefaultSlot)
+    m_pidController.setSmartMotionAllowedClosedLoopError(m_constants.kSmartMotionTolerance, m_constants.kDefaultSlot);
 
     m_currentState = m_constants.kinitialState;
     m_currentState = m_constants.kinitialState;
@@ -60,11 +60,13 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
 
   public abstract void runToSetpoint();
 
-  public abstract void manualControl(double throttle, double multiplier, SubsystemState manualState) {
+  public abstract SubsystemType getSubsystemType();
+
+  public void manualControl(double throttle, double multiplier, SubsystemState manualState) {
     m_desiredState = manualState;
     m_currentState = manualState;
 
-    manualState.setPosition(m_desiredState.getPosition() + throttle * multiplier)
+    manualState.setPosition(m_desiredState.getPosition() + throttle * multiplier);
   }
 
   public void setState(SubsystemState desiredState) {
@@ -134,6 +136,12 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
     String getName();
 
     void setPosition(double position);
+  }
+
+  public enum SubsystemType {
+    ARM,
+    ELEVATOR,
+    WRIST
   }
 
 }

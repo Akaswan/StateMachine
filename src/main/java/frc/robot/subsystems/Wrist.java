@@ -6,11 +6,11 @@ import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import frc.robot.subsystems.manager.ServoMotorSubsystem;
 
-public class Arm extends ServoMotorSubsystem {
+public class Wrist extends ServoMotorSubsystem {
 
     private ArmFeedforward m_feedforward;
 
-    public Arm(ServoMotorSubsystemConstants constants) {
+    public Wrist(ServoMotorSubsystemConstants constants) {
         super(constants);
 
         m_feedforward = new ArmFeedforward(constants.kKs, constants.kKg, constants.kKv, constants.kKa);
@@ -28,10 +28,10 @@ public class Arm extends ServoMotorSubsystem {
 
     @Override
     public SubsystemType getSubsystemType() {
-        return SubsystemType.ARM;
+        return SubsystemType.WRIST;
     }
 
-    public enum ArmState implements SubsystemState {
+    public enum WristState implements SubsystemState {
         MANUAL(0, "Manual"),
         HOME(0, "Home"),
         OUT(100, "Out"),
@@ -40,7 +40,7 @@ public class Arm extends ServoMotorSubsystem {
         private double position;
         private String name;
 
-        private ArmState(double position, String name) {
+        private WristState(double position, String name) {
             this.position = position;
             this.name = name;
         }

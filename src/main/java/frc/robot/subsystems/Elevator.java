@@ -3,17 +3,17 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import frc.robot.subsystems.manager.ServoMotorSubsystem;
 
-public class Arm extends ServoMotorSubsystem {
+public class Elevator extends ServoMotorSubsystem {
 
-    private ArmFeedforward m_feedforward;
+    private ElevatorFeedforward m_feedforward;
 
-    public Arm(ServoMotorSubsystemConstants constants) {
+    public Elevator(ServoMotorSubsystemConstants constants) {
         super(constants);
 
-        m_feedforward = new ArmFeedforward(constants.kKs, constants.kKg, constants.kKv, constants.kKa);
+        m_feedforward = new ElevatorFeedforward(constants.kKs, constants.kKg, constants.kKv, constants.kKa);
     }
 
     @Override
@@ -28,10 +28,10 @@ public class Arm extends ServoMotorSubsystem {
 
     @Override
     public SubsystemType getSubsystemType() {
-        return SubsystemType.ARM;
+        return SubsystemType.ELEVATOR;
     }
 
-    public enum ArmState implements SubsystemState {
+    public enum ElevatorState implements SubsystemState {
         MANUAL(0, "Manual"),
         HOME(0, "Home"),
         OUT(100, "Out"),
@@ -40,7 +40,7 @@ public class Arm extends ServoMotorSubsystem {
         private double position;
         private String name;
 
-        private ArmState(double position, String name) {
+        private ElevatorState(double position, String name) {
             this.position = position;
             this.name = name;
         }

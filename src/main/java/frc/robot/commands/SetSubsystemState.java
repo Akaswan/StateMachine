@@ -5,8 +5,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.statemachine.MechStateMachine;
-import frc.robot.statemachine.mechstates.MechState;
+import frc.robot.subsystems.manager.ServoMotorSubsystem;
+import frc.robot.subsystems.manager.ServoMotorSubsystem.SubsystemState;
 
 public class SetSubsystemState extends Command {
   /** Creates a new SetMechState. */

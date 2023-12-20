@@ -1,5 +1,11 @@
 package frc.robot;
 
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import frc.robot.subsystems.manager.ServoMotorSubsystem.CANSparkMaxConstants;
+import frc.robot.subsystems.manager.ServoMotorSubsystem.ServoMotorSubsystemConstants;
+
 public class Constants {
     public static final class OperatorConstants {
         public static final int kDriverControllerPort = 0;
@@ -23,7 +29,7 @@ public class Constants {
             kArmSlaveConstants[0].kCurrentLimit = 80;
         }
 
-        public static final ServoMotorSubsystemConstants kArmConstants = new ServoMotorSubsystemConstants()
+        public static final ServoMotorSubsystemConstants kArmConstants = new ServoMotorSubsystemConstants();
         static {
             kArmConstants.kName = "Arm";
 
