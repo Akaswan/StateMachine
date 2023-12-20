@@ -11,6 +11,9 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController.AccelStrategy;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class ServoMotorSubsystem extends SubsystemBase {
@@ -24,6 +27,14 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
   protected SubsystemState m_desiredState = null;
 
   protected final SparkMaxPIDController m_pidController;
+
+  protected TrapezoidProfile m_profile;
+  protected TrapezoidProfile.State m_goal = new TrapezoidProfile.State();
+  protected TrapezoidProfile.State m_setpoint = new TrapezoidProfile.State();
+  
+  protected double m_profileStartTime = -1;
+
+  protected double m_simPosition;
 
   protected ServoMotorSubsystem(final ServoMotorSubsystemConstants constants) {
     m_constants = constants;
@@ -47,18 +58,18 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
     m_pidController.setP(m_constants.kKp, m_constants.kDefaultSlot);
     m_pidController.setI(m_constants.kKi, m_constants.kDefaultSlot);
     m_pidController.setD(m_constants.kKd, m_constants.kDefaultSlot);
-    m_pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, m_constants.kDefaultSlot);
-    m_pidController.setSmartMotionMaxAccel(m_constants.kMaxAcceleration, m_constants.kDefaultSlot);
-    m_pidController.setSmartMotionMaxVelocity(m_constants.kMaxVelocity, m_constants.kDefaultSlot);
-    m_pidController.setSmartMotionAllowedClosedLoopError(m_constants.kSmartMotionTolerance, m_constants.kDefaultSlot);
+
+    m_profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(m_constants.kMaxVelocity, m_constants.kMaxAcceleration));
 
     m_currentState = m_constants.kinitialState;
-    m_currentState = m_constants.kinitialState;
+    m_desiredState = m_constants.kinitialState;
   }
 
   public abstract void outputTelemetry();
 
   public abstract void runToSetpoint();
+
+  public abstract void holdPosition();
 
   public abstract SubsystemType getSubsystemType();
 
@@ -71,19 +82,36 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
 
   public void setState(SubsystemState desiredState) {
     m_desiredState = desiredState;
+
+    m_profileStartTime = Timer.getFPGATimestamp();
   }
 
   public boolean atSetpoint() {
     return Math.abs(m_desiredState.getPosition() - m_encoder.getPosition()) < m_constants.kSetpointTolerance;
   }
 
+  public double getPosition() {
+    return RobotBase.isReal() ? m_encoder.getPosition() : m_simPosition;
+  }
+
+  public double getVelocity() {
+    return RobotBase.isReal() ? m_encoder.getVelocity() : 0;
+  }
+
   @Override
   public void periodic() {
     outputTelemetry();
-    runToSetpoint();
 
-    if (atSetpoint()) {
+
+    if (m_profileStartTime == -1) {
+      holdPosition();
+    } else {
+      runToSetpoint();
+    }
+    
+    if (atSetpoint() && m_currentState != m_desiredState) {
       m_currentState = m_desiredState;
+      m_profileStartTime = -1;
     }
 
   }

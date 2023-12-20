@@ -3,6 +3,7 @@ package frc.robot;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.manager.ServoMotorSubsystem.CANSparkMaxConstants;
 import frc.robot.subsystems.manager.ServoMotorSubsystem.ServoMotorSubsystemConstants;
 
@@ -23,6 +24,7 @@ public class Constants {
 
         public static final CANSparkMaxConstants[] kArmSlaveConstants = new CANSparkMaxConstants[1];
         static {
+            kArmSlaveConstants[0] = new CANSparkMaxConstants();
             kArmSlaveConstants[0].kID = 15;
             kArmSlaveConstants[0].kIdleMode = IdleMode.kBrake;
             kArmSlaveConstants[0].kMotorType = MotorType.kBrushless;
@@ -47,8 +49,8 @@ public class Constants {
 
             kArmConstants.kDefaultSlot = 0;
 
-            kArmConstants.kMaxVelocity = 75;
-            kArmConstants.kMaxAcceleration = 60;
+            kArmConstants.kMaxVelocity = .005;
+            kArmConstants.kMaxAcceleration = .005;
 
             kArmConstants.kKs = 0.0;
             kArmConstants.kKg = 0.0;
@@ -58,7 +60,7 @@ public class Constants {
             kArmConstants.kMaxPosition = 500.0;
             kArmConstants.kMinPosition = 0.0;
 
-            kArmConstants.kinitialState = null;
+            kArmConstants.kinitialState = ArmState.HOME;
         }
     }
 }
