@@ -19,6 +19,9 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmState;
+import frc.robot.subsystems.manager.ServoMotorSubsystem;
+import frc.robot.subsystems.manager.SuperstructureStateManager;
+import frc.robot.subsystems.manager.SuperstructureStateManager.SuperstructureState;
 
 public class RobotContainer {
 
@@ -27,6 +30,8 @@ public class RobotContainer {
   public static final Arm m_arm = new Arm(ArmConstants.kArmConstants);
   public static final Elevator m_elevator = new Elevator(ElevatorConstants.kElevatorConstants);
   public static final Wrist m_wrist = new Wrist(WristConstants.kWristConstants);
+
+  public static final SuperstructureStateManager m_manager = new SuperstructureStateManager(SuperstructureState.HOME);
 
   public RobotContainer() {
 
@@ -41,6 +46,7 @@ public class RobotContainer {
     m_driverController.a().onTrue(new InstantCommand(() -> m_arm.setState(ArmState.OUT)));
     m_driverController.b().onTrue(new InstantCommand(() -> m_arm.setState(ArmState.HOME)));
     m_driverController.x().onTrue(new InstantCommand(() -> m_arm.setState(ArmState.IN)));
+    m_driverController.y().onTrue(m_manager.goToState(new ServoMotorSubsystem[] {m_arm, m_elevator, m_wrist}, SuperstructureState.PLACE));
   }
 
   public Command getAutonomousCommand() {

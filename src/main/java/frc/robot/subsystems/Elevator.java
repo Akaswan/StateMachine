@@ -45,7 +45,7 @@ public class Elevator extends ServoMotorSubsystem {
         TRANSITION(0, 0, "Transition"),
         SETPOINT_SWITCH(0, 0, "Setpoint Switch"),
         HOME(0, 0, "Home"),
-        OUT(3, 0, "Out"),
+        OUT(1.5, 0, "Out"),
         IN(.5, 0, "In");
 
         private double position;
