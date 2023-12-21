@@ -60,17 +60,33 @@ public class SuperstructureStateManager {
         m_desiredState = desiredState;
     }
 
-    public SequentialCommandGroup goToState(ServoMotorSubsystem[] order, SuperstructureState desiredState) {
-        SequentialCommandGroup goToStateCommand = new SequentialCommandGroup();
-
-        for (int i = 0; i < order.length; i++) {
-            goToStateCommand.addCommands(new SetSubsystemState(order[i], desiredState));
-        }
-        
-
-        return goToStateCommand;
+    public void setCurrentState(SuperstructureState currentState) {
+        m_currentState = currentState;
     }
 
-    
+    public SuperstructureState getDesiredState() {
+        return m_desiredState;
+    }
+
+    public SuperstructureState getCurrentState() {
+        return m_currentState;
+    }
+
+    public SequentialCommandGroup setSuperstructureState(ServoMotorSubsystem[] order, SuperstructureState desiredState) {
+        SequentialCommandGroup outputCommand = new SequentialCommandGroup();
+        m_desiredState = desiredState;
+
+        for (int i = 0; i < order.length; i++) {
+            outputCommand.addCommands(new SetSubsystemState(order[i], desiredState));
+        }
+        
+        return outputCommand;
+    }
+
+    public SequentialCommandGroup goToState(SuperstructureState desiredState) {
+        switch (desiredState) {
+            case HOME
+        }
+    }
     
 }

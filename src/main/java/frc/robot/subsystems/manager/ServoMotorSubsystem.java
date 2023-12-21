@@ -29,8 +29,6 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
   protected SubsystemState m_currentState = null;
   protected SubsystemState m_desiredState = null;
   protected SubsystemState m_previousDesiredState = null;
-  protected SubsystemState m_manualState = null;
-  protected SubsystemState m_setpointSwitchState = null;
 
   protected final SparkMaxPIDController m_pidController;
 
@@ -73,8 +71,6 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
     m_currentState = m_constants.kInitialState;
     m_desiredState = m_constants.kInitialState;
     m_previousDesiredState = m_constants.kInitialState;
-    m_manualState = m_constants.kManualState;
-    m_setpointSwitchState = m_constants.kSetpointSwitchState;
   }
 
   public abstract void outputTelemetry();
@@ -86,22 +82,22 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
   public void manualControl(double throttle, double multiplier, double deadband) {
     double m_throttle = MathUtil.applyDeadband(throttle, deadband);
 
-    if (m_currentState != m_manualState) m_manualState.setPosition(getPosition());
+    if (m_currentState != m_constants.kManualState) m_constants.kManualState.setPosition(getPosition());
 
     if (Math.abs(m_throttle) > 0 && m_profileStartTime == -1) {
-      m_lastHeldState = m_manualState;
-      m_desiredState = m_manualState; 
-      m_currentState = m_manualState;
+      m_lastHeldState = m_constants.kManualState;
+      m_desiredState = m_constants.kManualState; 
+      m_currentState = m_constants.kManualState;
 
       m_throttle *= multiplier;
 
-      if (m_manualState.getPosition() + m_throttle >= m_constants.kMinPosition && m_manualState.getPosition() + m_throttle < m_constants.kMaxPosition || 
-          m_manualState.getPosition() + m_throttle <= m_constants.kMaxPosition && m_manualState.getPosition() + m_throttle > m_constants.kMinPosition) {
-            m_manualState.setPosition(m_manualState.getPosition() + m_throttle);
-      } else if (m_manualState.getPosition() <= m_constants.kMinPosition) {
-        m_manualState.setPosition(m_constants.kMinPosition);
-      } else if (m_manualState.getPosition() >= m_constants.kMaxPosition){
-        m_manualState.setPosition(m_constants.kMaxPosition);
+      if (m_constants.kManualState.getPosition() + m_throttle >= m_constants.kMinPosition && m_constants.kManualState.getPosition() + m_throttle < m_constants.kMaxPosition || 
+          m_constants.kManualState.getPosition() + m_throttle <= m_constants.kMaxPosition && m_constants.kManualState.getPosition() + m_throttle > m_constants.kMinPosition) {
+            m_constants.kManualState.setPosition(m_constants.kManualState.getPosition() + m_throttle);
+      } else if (m_constants.kManualState.getPosition() <= m_constants.kMinPosition) {
+        m_constants.kManualState.setPosition(m_constants.kMinPosition);
+      } else if (m_constants.kManualState.getPosition() >= m_constants.kMaxPosition){
+        m_constants.kManualState.setPosition(m_constants.kMaxPosition);
       }
     } 
   }
@@ -113,16 +109,16 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
   }
 
   public void runToSetpoint() {
-      if (m_previousDesiredState != m_desiredState || m_lastHeldState == m_manualState) {
-        if (m_lastHeldState == m_manualState) {
+      if (m_previousDesiredState != m_desiredState || m_lastHeldState == m_constants.kManualState) {
+        if (m_lastHeldState == m_constants.kManualState) {
           System.out.println(m_previousDesiredState + " " + m_desiredState);
-          m_setpointSwitchState.setPosition(m_manualState.getPosition());
-          m_setpointSwitchState.setVelocity(m_manualState.getVelocity());
-          m_lastHeldState = m_setpointSwitchState;
+          m_constants.kSetpointSwitchState.setPosition(m_constants.kManualState.getPosition());
+          m_constants.kSetpointSwitchState.setVelocity(m_constants.kManualState.getVelocity());
+          m_lastHeldState = m_constants.kSetpointSwitchState;
         } else {
           System.out.println(m_previousDesiredState + " " + m_desiredState);
-          m_setpointSwitchState.setPosition(m_setpoint.position);
-          m_setpointSwitchState.setVelocity(m_setpoint.velocity);
+          m_constants.kSetpointSwitchState.setPosition(m_setpoint.position);
+          m_constants.kSetpointSwitchState.setVelocity(m_setpoint.velocity);
           m_lastHeldState = m_setpointSwitchState;
         }
       }
@@ -144,7 +140,7 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
         m_profileStartTime = -1;
         m_lastHeldState = m_desiredState;
         m_currentState = m_desiredState;
-        m_manualState.setPosition(0); 
+        m_constants.kManualState.setPosition(0); 
       } 
 
       m_previousDesiredState = m_desiredState;
