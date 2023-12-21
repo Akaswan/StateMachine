@@ -2,10 +2,10 @@ package frc.robot.subsystems.manager;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.SetSubsystemState;
-import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import frc.robot.subsystems.Wrist.WristState;
+import frc.robot.subsystems.manager.ServoMotorSubsystem.SubsystemState;
 
 public class SuperstructureStateManager {
 
@@ -35,15 +35,15 @@ public class SuperstructureStateManager {
         }
 
         public SubsystemState getArmState() {
-            return subsystemStates.getArmState()
+            return subsystemStates.getArmState();
         }
 
         public SubsystemState getElevatorState() {
-            return subsystemStates.getElevatorState()
+            return subsystemStates.getElevatorState();
         }
 
         public SubsystemState getWristState() {
-            return subsystemStates.getWristState()
+            return subsystemStates.getWristState();
         }
 
         public String getName() {
@@ -64,7 +64,7 @@ public class SuperstructureStateManager {
         SequentialCommandGroup goToStateCommand = new SequentialCommandGroup();
 
         for (int i = 0; i < order.length; i++) {
-            goToStateCommand.addCommands(new SetSubsystemState(order[i], desiredState))
+            goToStateCommand.addCommands(new SetSubsystemState(order[i], desiredState));
         }
         
 

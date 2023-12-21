@@ -7,10 +7,12 @@ package frc.robot.subsystems.manager;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxPIDController.AccelStrategy;
+import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
@@ -23,8 +25,12 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
   protected final CANSparkMax[] m_slaves;
   protected final RelativeEncoder m_encoder;
 
+  protected SubsystemState m_lastHeldState = null;
   protected SubsystemState m_currentState = null;
   protected SubsystemState m_desiredState = null;
+  protected SubsystemState m_previousDesiredState = null;
+  protected SubsystemState m_manualState = null;
+  protected SubsystemState m_setpointSwitchState = null;
 
   protected final SparkMaxPIDController m_pidController;
 
@@ -33,6 +39,8 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
   protected TrapezoidProfile.State m_setpoint = new TrapezoidProfile.State();
   
   protected double m_profileStartTime = -1;
+
+  protected double m_arbFeedforward = 0;
 
   protected double m_simPosition;
 
@@ -61,33 +69,98 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
 
     m_profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(m_constants.kMaxVelocity, m_constants.kMaxAcceleration));
 
-    m_currentState = m_constants.kinitialState;
-    m_desiredState = m_constants.kinitialState;
+    m_lastHeldState = m_constants.kInitialState;
+    m_currentState = m_constants.kInitialState;
+    m_desiredState = m_constants.kInitialState;
+    m_previousDesiredState = m_constants.kInitialState;
+    m_manualState = m_constants.kManualState;
+    m_setpointSwitchState = m_constants.kSetpointSwitchState;
   }
 
   public abstract void outputTelemetry();
 
-  public abstract void runToSetpoint();
-
-  public abstract void holdPosition();
-
   public abstract SubsystemType getSubsystemType();
 
-  public void manualControl(double throttle, double multiplier, SubsystemState manualState) {
-    m_desiredState = manualState;
-    m_currentState = manualState;
+  public abstract void subsystemPeriodic();
 
-    manualState.setPosition(m_desiredState.getPosition() + throttle * multiplier);
+  public void manualControl(double throttle, double multiplier, double deadband) {
+    double m_throttle = MathUtil.applyDeadband(throttle, deadband);
+
+    if (m_currentState != m_manualState) m_manualState.setPosition(getPosition());
+
+    if (Math.abs(m_throttle) > 0 && m_profileStartTime == -1) {
+      m_lastHeldState = m_manualState;
+      m_desiredState = m_manualState; 
+      m_currentState = m_manualState;
+
+      m_throttle *= multiplier;
+
+      if (m_manualState.getPosition() + m_throttle >= m_constants.kMinPosition && m_manualState.getPosition() + m_throttle < m_constants.kMaxPosition || 
+          m_manualState.getPosition() + m_throttle <= m_constants.kMaxPosition && m_manualState.getPosition() + m_throttle > m_constants.kMinPosition) {
+            m_manualState.setPosition(m_manualState.getPosition() + m_throttle);
+      } else if (m_manualState.getPosition() <= m_constants.kMinPosition) {
+        m_manualState.setPosition(m_constants.kMinPosition);
+      } else if (m_manualState.getPosition() >= m_constants.kMaxPosition){
+        m_manualState.setPosition(m_constants.kMaxPosition);
+      }
+    } 
+  }
+
+  public void holdPosition() {
+    m_pidController.setReference(m_currentState.getPosition(), ControlType.kPosition, m_constants.kDefaultSlot, m_arbFeedforward, ArbFFUnits.kVoltage);
+
+    m_simPosition = m_currentState.getPosition();
+  }
+
+  public void runToSetpoint() {
+      if (m_previousDesiredState != m_desiredState || m_lastHeldState == m_manualState) {
+        if (m_lastHeldState == m_manualState) {
+          System.out.println(m_previousDesiredState + " " + m_desiredState);
+          m_setpointSwitchState.setPosition(m_manualState.getPosition());
+          m_setpointSwitchState.setVelocity(m_manualState.getVelocity());
+          m_lastHeldState = m_setpointSwitchState;
+        } else {
+          System.out.println(m_previousDesiredState + " " + m_desiredState);
+          m_setpointSwitchState.setPosition(m_setpoint.position);
+          m_setpointSwitchState.setVelocity(m_setpoint.velocity);
+          m_lastHeldState = m_setpointSwitchState;
+        }
+      }
+
+      m_setpoint = m_profile.calculate(Timer.getFPGATimestamp() - m_profileStartTime, new TrapezoidProfile.State(m_desiredState.getPosition(), 0), new TrapezoidProfile.State(m_lastHeldState.getPosition(), m_lastHeldState.getVelocity()));
+     
+      if (RobotBase.isReal()) {
+          m_pidController.setReference(m_setpoint.position, ControlType.kPosition, m_constants.kDefaultSlot, m_arbFeedforward, ArbFFUnits.kVoltage);
+      } else {
+          m_simPosition = m_setpoint.position;
+      }
+
+      if (m_currentState != m_constants.kTransitionState) m_currentState = m_constants.kTransitionState;
+
+      m_constants.kTransitionState.setPosition(m_setpoint.position);
+      m_constants.kTransitionState.setVelocity(m_setpoint.velocity);
+
+      if (m_setpoint.position == m_desiredState.getPosition()) {
+        m_profileStartTime = -1;
+        m_lastHeldState = m_desiredState;
+        m_currentState = m_desiredState;
+        m_manualState.setPosition(0); 
+      } 
+
+      m_previousDesiredState = m_desiredState;
+  }
+
+  public void setFeedforward(double feedforward) {
+    m_arbFeedforward = feedforward;
   }
 
   public void setState(SubsystemState desiredState) {
     m_desiredState = desiredState;
-
     m_profileStartTime = Timer.getFPGATimestamp();
   }
 
   public boolean atSetpoint() {
-    return Math.abs(m_desiredState.getPosition() - m_encoder.getPosition()) < m_constants.kSetpointTolerance;
+    return Math.abs(m_desiredState.getPosition() - getPosition()) < m_constants.kSetpointTolerance;
   }
 
   public double getPosition() {
@@ -98,24 +171,21 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
     return RobotBase.isReal() ? m_encoder.getVelocity() : 0;
   }
 
+  public ServoMotorSubsystemConstants getConstants() {
+    return m_constants;
+  }
+
   @Override
   public void periodic() {
-    outputTelemetry();
-
+    subsystemPeriodic();
 
     if (m_profileStartTime == -1) {
       holdPosition();
-      System.out.println("Holding");
     } else {
       runToSetpoint();
-      System.out.println("MOVING");
     }
-    
-    if (atSetpoint() && m_currentState != m_desiredState) {
-      m_currentState = m_desiredState;
-      m_profileStartTime = -1;
-    }
-
+  
+    outputTelemetry();
   }
 
   public static class ServoMotorSubsystemConstants {
@@ -150,7 +220,15 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
     public double kMaxPosition = Double.POSITIVE_INFINITY;
     public double kMinPosition = Double.NEGATIVE_INFINITY;
 
-    public SubsystemState kinitialState = null;
+    // Manual constants
+    public int kManualAxis = 0;
+    public double kManualMultiplier = 0;
+    public double kManualDeadZone = 0;
+
+    public SubsystemState kInitialState = null;
+    public SubsystemState kManualState = null;
+    public SubsystemState kTransitionState = null;
+    public SubsystemState kSetpointSwitchState = null;
   }
 
   public static class CANSparkMaxConstants {
@@ -163,9 +241,13 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
   public interface SubsystemState {
     double getPosition();
 
-    String getName();
+    double getVelocity();
 
     void setPosition(double position);
+
+    void setVelocity(double velocity);
+
+    String getName();    
   }
 
   public enum SubsystemType {

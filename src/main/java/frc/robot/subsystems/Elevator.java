@@ -1,11 +1,7 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax.ControlType;
-import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
-
 import edu.wpi.first.math.controller.ElevatorFeedforward;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.manager.ServoMotorSubsystem;
 
 public class Elevator extends ServoMotorSubsystem {
@@ -20,19 +16,22 @@ public class Elevator extends ServoMotorSubsystem {
 
     @Override
     public void outputTelemetry() {
-
+        // SmartDashboard.putNumber("Desired Position", m_desiredState.getPosition());
+        // SmartDashboard.putNumber("Current Position", m_currentState.getPosition());
+        // SmartDashboard.putNumber("Last Held Position", m_lastHeldState.getPosition());
+        // SmartDashboard.putNumber("Last Held Velocity", m_lastHeldState.getVelocity());
+        // SmartDashboard.putString("Last Held State", m_lastHeldState.getName());
+        // SmartDashboard.putString("Current State", m_currentState.getName());
+        // SmartDashboard.putNumber("Current State Velocity", m_currentState.getVelocity());
+        // SmartDashboard.putNumber("Current setpoint Velocity", m_setpoint.velocity);
+        // SmartDashboard.putString("Desired State", m_desiredState.getName());
     }
 
     @Override
-    public void holdPosition() {
-        m_pidController.setReference(m_currentState.getPosition(), ControlType.kPosition, m_constants.kDefaultSlot, m_feedforward.calculate(m_encoder.getPosition(), m_encoder.getVelocity()), ArbFFUnits.kVoltage);
-    }
+    public void subsystemPeriodic() {
+        setFeedforward(m_feedforward.calculate(m_encoder.getPosition(), m_encoder.getVelocity()));
 
-    @Override
-    public void runToSetpoint() {
-        m_setpoint = m_profile.calculate(Timer.getFPGATimestamp() - m_profileStartTime, new TrapezoidProfile.State(m_desiredState.getPosition(), 0), new TrapezoidProfile.State(m_encoder.getPosition(), m_encoder.getVelocity()));
-
-        m_pidController.setReference(m_setpoint.position, ControlType.kPosition, m_constants.kDefaultSlot, m_feedforward.calculate(m_setpoint.position, m_setpoint.velocity), ArbFFUnits.kVoltage);
+        Arm.root.setPosition(1.5, m_simPosition);
     }
 
 
@@ -42,16 +41,20 @@ public class Elevator extends ServoMotorSubsystem {
     }
 
     public enum ElevatorState implements SubsystemState {
-        MANUAL(0, "Manual"),
-        HOME(0, "Home"),
-        OUT(100, "Out"),
-        IN(20, "In");
+        MANUAL(0, 0, "Manual"),
+        TRANSITION(0, 0, "Transition"),
+        SETPOINT_SWITCH(0, 0, "Setpoint Switch"),
+        HOME(0, 0, "Home"),
+        OUT(3, 0, "Out"),
+        IN(.5, 0, "In");
 
         private double position;
+        private double velocity;
         private String name;
 
-        private ElevatorState(double position, String name) {
+        private ElevatorState(double position, double velocity, String name) {
             this.position = position;
+            this.velocity = velocity;
             this.name = name;
         }
 
@@ -61,8 +64,18 @@ public class Elevator extends ServoMotorSubsystem {
         }
 
         @Override
+        public double getVelocity() {
+            return velocity;
+        }
+
+        @Override
         public void setPosition(double position) {
             this.position = position;
+        }
+
+        @Override
+        public void setVelocity(double velocity) {
+            this.velocity = velocity;
         }
 
         @Override

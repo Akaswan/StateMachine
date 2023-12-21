@@ -1,49 +1,44 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax.ControlType;
-import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.subsystems.manager.ServoMotorSubsystem;
 
 public class Arm extends ServoMotorSubsystem {
 
     private ArmFeedforward m_feedforward;
+    public static Mechanism2d mech = new Mechanism2d(3, 3);
+    public static MechanismRoot2d root = mech.getRoot("SuperStructure", 1.5, 1.5);
+    public static MechanismLigament2d armLig;
+    public static MechanismLigament2d wristLig;
 
     public Arm(ServoMotorSubsystemConstants constants) {
         super(constants);
 
         m_feedforward = new ArmFeedforward(constants.kKs, constants.kKg, constants.kKv, constants.kKa);
+
+        armLig = root.append(new MechanismLigament2d("Arm", 1, 90, 10, new Color8Bit(Color.kPurple)));
+        wristLig = armLig.append(new MechanismLigament2d("Wrist", .33, 90, 7.5, new Color8Bit(Color.kAliceBlue)));
+        SmartDashboard.putData("Mech2d", mech);
     }
 
     @Override
     public void outputTelemetry() {
-        SmartDashboard.putNumber("Desired Position", m_setpoint.position);
-        SmartDashboard.putNumber("Position", m_simPosition);
-        SmartDashboard.putNumber("Velocity", m_setpoint.velocity);
-    }
-
-    @Override
-    public void holdPosition() {
-        m_pidController.setReference(m_currentState.getPosition(), ControlType.kPosition, m_constants.kDefaultSlot, m_feedforward.calculate(Math.toRadians(getPosition()), Math.toRadians(getVelocity())), ArbFFUnits.kVoltage);
-    }
-
-    @Override
-    public void runToSetpoint() {
-
-        m_setpoint = m_profile.calculate(Timer.getFPGATimestamp() - m_profileStartTime, new TrapezoidProfile.State(m_desiredState.getPosition(), 0), new TrapezoidProfile.State(m_currentState.getPosition(), 0));
-
-        if (RobotBase.isReal()) {
-            m_pidController.setReference(m_setpoint.position, ControlType.kPosition, m_constants.kDefaultSlot, m_feedforward.calculate(Math.toRadians(getPosition()), Math.toRadians(m_setpoint.velocity)), ArbFFUnits.kVoltage);
-        } else {
-            m_simPosition = m_setpoint.position;
-        }
-
-        if (m_setpoint.position == m_desiredState.getPosition()) m_profileStartTime = -1;
+        // SmartDashboard.putNumber("Desired Position", m_desiredState.getPosition());
+        // SmartDashboard.putNumber("Current Position", m_currentState.getPosition());
+        // SmartDashboard.putNumber("Last Held Position", m_lastHeldState.getPosition());
+        // SmartDashboard.putNumber("Last Held Velocity", m_lastHeldState.getVelocity());
+        // SmartDashboard.putString("Last Held State", m_lastHeldState.getName());
+        // SmartDashboard.putString("Current State", m_currentState.getName());
+        // SmartDashboard.putNumber("Current State Velocity", m_currentState.getVelocity());
+        // SmartDashboard.putNumber("Current setpoint Velocity", m_setpoint.velocity);
+        // SmartDashboard.putString("Desired State", m_desiredState.getName());
     }
 
     @Override
@@ -51,17 +46,29 @@ public class Arm extends ServoMotorSubsystem {
         return SubsystemType.ARM;
     }
 
+    @Override
+    public void subsystemPeriodic() {
+        setFeedforward(m_feedforward.calculate(m_encoder.getPosition(), m_encoder.getVelocity()));
+
+
+        armLig.setAngle(m_simPosition);
+    }
+
     public enum ArmState implements SubsystemState {
-        MANUAL(0, "Manual"),
-        HOME(0, "Home"),
-        OUT(100, "Out"),
-        IN(20, "In");
+        MANUAL(0, 0, "Manual"),
+        TRANSITION(0, 0, "Transition"),
+        SETPOINT_SWITCH(0, 0, "Setpoint Switch"),
+        HOME(0, 0, "Home"),
+        OUT(100, 0, "Out"),
+        IN(20, 0, "In");
 
         private double position;
+        private double velocity;
         private String name;
 
-        private ArmState(double position, String name) {
+        private ArmState(double position, double velocity, String name) {
             this.position = position;
+            this.velocity = velocity;
             this.name = name;
         }
 
@@ -71,8 +78,18 @@ public class Arm extends ServoMotorSubsystem {
         }
 
         @Override
+        public double getVelocity() {
+            return velocity;
+        }
+
+        @Override
         public void setPosition(double position) {
             this.position = position;
+        }
+
+        @Override
+        public void setVelocity(double velocity) {
+            this.velocity = velocity;
         }
 
         @Override

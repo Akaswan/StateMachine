@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.manager.ServoMotorSubsystem;
 import frc.robot.subsystems.manager.ServoMotorSubsystem.SubsystemState;
+import frc.robot.subsystems.manager.SuperstructureStateManager.SuperstructureState;
 
 public class SetSubsystemState extends Command {
   /** Creates a new SetMechState. */
@@ -38,16 +39,14 @@ public class SetSubsystemState extends Command {
       m_subsystem.setState(m_state);
     } else if (m_state == null) {
       switch (m_subsystem.getSubsystemType()) {
-        case SubsystemType.ARM:
+        case ARM:
           m_subsystem.setState(m_superStructureState.getArmState());
           break;
-        case SubsystemType.ELEVATOR:
+        case ELEVATOR:
           m_subsystem.setState(m_superStructureState.getElevatorState());
           break;
-        case SubsystemType.WRIST:
+        case WRIST:
           m_subsystem.setState(m_superStructureState.getWristState());
-          break;
-        default:
           break;
       }
       

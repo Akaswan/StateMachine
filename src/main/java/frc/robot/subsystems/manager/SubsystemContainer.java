@@ -3,7 +3,7 @@ package frc.robot.subsystems.manager;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Wrist;
-import frc.robot.subsystems.manager.ServoMotorSubsystem.SubsystemState;
+import frc.robot.subsystems.manager.ServoMotorSubsystem.SubsystemType;
 
 public class SubsystemContainer {
     private Arm m_arm;
@@ -31,18 +31,14 @@ public class SubsystemContainer {
 
     public ServoMotorSubsystem getType(SubsystemType type) {
         switch (type) {
-            case SubsystemType.ARM:
+            case ARM:
                 return m_arm;
-                break;
-            case SubsystemType.ELEVATOR:
+            case ELEVATOR:
                 return m_elevator;
-                break;
-            case SubsystemType.WRIST:
+            case WRIST:
                 return m_wrist;
-                break;
             default:
                 return null;
-                break;
         }
     }
 
