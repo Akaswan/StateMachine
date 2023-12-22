@@ -21,7 +21,7 @@ public class Wrist extends ServoMotorSubsystem {
     public void subsystemPeriodic() {
         setFeedforward(m_feedforward.calculate(m_encoder.getPosition(), m_encoder.getVelocity()));
 
-        Arm.wristLig.setAngle(m_simPosition);
+        Arm.wristLig.setAngle(m_currentState.getPosition());
     }
 
     @Override

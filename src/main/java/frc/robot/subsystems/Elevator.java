@@ -21,7 +21,7 @@ public class Elevator extends ServoMotorSubsystem {
     public void subsystemPeriodic() {
         setFeedforward(m_feedforward.calculate(m_encoder.getPosition(), m_encoder.getVelocity()));
 
-        Arm.root.setPosition(1.5, m_simPosition);
+        Arm.root.setPosition(1.5, m_currentState.getPosition());
     }
 
 

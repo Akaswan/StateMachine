@@ -29,7 +29,7 @@ public class Arm extends ServoMotorSubsystem {
 
     @Override
     public void outputTelemetry() {
-        
+
     }
 
     @Override
@@ -42,7 +42,7 @@ public class Arm extends ServoMotorSubsystem {
         setFeedforward(m_feedforward.calculate(m_encoder.getPosition(), m_encoder.getVelocity()));
 
 
-        armLig.setAngle(m_simPosition);
+        armLig.setAngle(m_currentState.getPosition());
     }
 
     public enum ArmState implements SubsystemState {

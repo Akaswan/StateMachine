@@ -40,8 +40,6 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
 
   protected double m_arbFeedforward = 0;
 
-  protected double m_simPosition;
-
   protected ServoMotorSubsystem(final ServoMotorSubsystemConstants constants) {
     m_constants = constants;
 
@@ -108,8 +106,6 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
 
   public void holdPosition() {
     m_pidController.setReference(m_currentState.getPosition(), ControlType.kPosition, m_constants.kDefaultSlot, m_arbFeedforward, ArbFFUnits.kVoltage);
-
-    m_simPosition = m_currentState.getPosition();
   }
 
   public void runToSetpoint() {
@@ -127,11 +123,7 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
 
       m_setpoint = m_profile.calculate(Timer.getFPGATimestamp() - m_profileStartTime, new TrapezoidProfile.State(m_desiredState.getPosition(), 0), new TrapezoidProfile.State(m_lastHeldState.getPosition(), m_lastHeldState.getVelocity()));
      
-      if (RobotBase.isReal()) {
-          m_pidController.setReference(m_setpoint.position, ControlType.kPosition, m_constants.kDefaultSlot, m_arbFeedforward, ArbFFUnits.kVoltage);
-      } else {
-          m_simPosition = m_setpoint.position;
-      }
+      m_pidController.setReference(m_setpoint.position, ControlType.kPosition, m_constants.kDefaultSlot, m_arbFeedforward, ArbFFUnits.kVoltage);
 
       if (m_currentState != m_constants.kTransitionState) m_currentState = m_constants.kTransitionState;
 
@@ -162,7 +154,7 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
   }
 
   public double getPosition() {
-    return RobotBase.isReal() ? m_encoder.getPosition() : m_simPosition;
+    return m_encoder.getPosition();
   }
 
   public double getVelocity() {
