@@ -79,6 +79,10 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
 
   public abstract void subsystemPeriodic();
 
+  public SubsystemState getCurrentState() {
+    return m_currentState;
+  }
+
   public void manualControl(double throttle, double multiplier, double deadband) {
     double m_throttle = MathUtil.applyDeadband(throttle, deadband);
 
@@ -111,15 +115,13 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
   public void runToSetpoint() {
       if (m_previousDesiredState != m_desiredState || m_lastHeldState == m_constants.kManualState) {
         if (m_lastHeldState == m_constants.kManualState) {
-          System.out.println(m_previousDesiredState + " " + m_desiredState);
           m_constants.kSetpointSwitchState.setPosition(m_constants.kManualState.getPosition());
           m_constants.kSetpointSwitchState.setVelocity(m_constants.kManualState.getVelocity());
           m_lastHeldState = m_constants.kSetpointSwitchState;
         } else {
-          System.out.println(m_previousDesiredState + " " + m_desiredState);
           m_constants.kSetpointSwitchState.setPosition(m_setpoint.position);
           m_constants.kSetpointSwitchState.setVelocity(m_setpoint.velocity);
-          m_lastHeldState = m_setpointSwitchState;
+          m_lastHeldState = m_constants.kSetpointSwitchState;
         }
       }
 

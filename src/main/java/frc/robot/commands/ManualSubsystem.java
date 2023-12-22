@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.manager.ServoMotorSubsystem;
 
 public class ManualSubsystem extends Command {

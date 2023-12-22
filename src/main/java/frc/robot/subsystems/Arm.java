@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -30,15 +29,7 @@ public class Arm extends ServoMotorSubsystem {
 
     @Override
     public void outputTelemetry() {
-        // SmartDashboard.putNumber("Desired Position", m_desiredState.getPosition());
-        // SmartDashboard.putNumber("Current Position", m_currentState.getPosition());
-        // SmartDashboard.putNumber("Last Held Position", m_lastHeldState.getPosition());
-        // SmartDashboard.putNumber("Last Held Velocity", m_lastHeldState.getVelocity());
-        // SmartDashboard.putString("Last Held State", m_lastHeldState.getName());
-        // SmartDashboard.putString("Current State", m_currentState.getName());
-        // SmartDashboard.putNumber("Current State Velocity", m_currentState.getVelocity());
-        // SmartDashboard.putNumber("Current setpoint Velocity", m_setpoint.velocity);
-        // SmartDashboard.putString("Desired State", m_desiredState.getName());
+        
     }
 
     @Override

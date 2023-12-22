@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.manager.ServoMotorSubsystem;
 import frc.robot.subsystems.manager.ServoMotorSubsystem.SubsystemState;
 import frc.robot.subsystems.manager.SuperstructureStateManager.SuperstructureState;
@@ -12,7 +13,6 @@ import frc.robot.subsystems.manager.SuperstructureStateManager.SuperstructureSta
 public class SetSubsystemState extends Command {
   /** Creates a new SetMechState. */
   private ServoMotorSubsystem m_subsystem;
-  private SuperstructureStateManager m_manager = RobotContainer.m_manager;
 
   private SubsystemState m_state;
   private SuperstructureState m_superStructureState;
@@ -51,30 +51,27 @@ public class SetSubsystemState extends Command {
       
     }
 
-    m_subsystem.setState(m_state)
+    m_subsystem.setState(m_state);
     
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (SuperstructureState.TRANSITION.getArmState() != RobotContainer.m_arm.getCurrentState()) {
+      SuperstructureState.TRANSITION.setArmState(RobotContainer.m_arm.getCurrentState());
+    }
+    if (SuperstructureState.TRANSITION.getWristState() != RobotContainer.m_wrist.getCurrentState()) {
+      SuperstructureState.TRANSITION.setWristState(RobotContainer.m_wrist.getCurrentState());
+    }
+    if (SuperstructureState.TRANSITION.getElevatorState() != RobotContainer.m_elevator.getCurrentState()) {
+    SuperstructureState.TRANSITION.setElevatorState(RobotContainer.m_elevator.getCurrentState());
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    switch (m_subsystem.getSubsystemType()) {
-        case ARM:
-          if (m_manager.getDesiredState.getArmState() == m_state)
-          break;
-        case ELEVATOR:
-          m_subsystem.setState(m_superStructureState.getElevatorState());
-          break;
-        case WRIST:
-          m_subsystem.setState(m_superStructureState.getWristState());
-          break;
-    }
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

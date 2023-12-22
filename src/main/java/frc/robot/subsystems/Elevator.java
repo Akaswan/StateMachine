@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.manager.ServoMotorSubsystem;
 
 public class Elevator extends ServoMotorSubsystem {
@@ -16,15 +15,6 @@ public class Elevator extends ServoMotorSubsystem {
 
     @Override
     public void outputTelemetry() {
-        // SmartDashboard.putNumber("Desired Position", m_desiredState.getPosition());
-        // SmartDashboard.putNumber("Current Position", m_currentState.getPosition());
-        // SmartDashboard.putNumber("Last Held Position", m_lastHeldState.getPosition());
-        // SmartDashboard.putNumber("Last Held Velocity", m_lastHeldState.getVelocity());
-        // SmartDashboard.putString("Last Held State", m_lastHeldState.getName());
-        // SmartDashboard.putString("Current State", m_currentState.getName());
-        // SmartDashboard.putNumber("Current State Velocity", m_currentState.getVelocity());
-        // SmartDashboard.putNumber("Current setpoint Velocity", m_setpoint.velocity);
-        // SmartDashboard.putString("Desired State", m_desiredState.getName());
     }
 
     @Override

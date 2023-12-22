@@ -13,6 +13,7 @@ import frc.robot.subsystems.manager.ServoMotorSubsystem.ServoMotorSubsystemConst
 public class Constants {
     public static final class OperatorConstants {
         public static final int kDriverControllerPort = 0;
+        public static final int kOperatorControllerPort = 0;
     }
 
     public static final class ArmConstants {
@@ -47,8 +48,8 @@ public class Constants {
             kArmConstants.kKp = 0.2;
             kArmConstants.kKi = 0.0;
             kArmConstants.kKd = 0.0;
-            kArmConstants.kSetpointTolerance = 0.25; 
-            kArmConstants.kSmartMotionTolerance = 0.25;
+            kArmConstants.kSetpointTolerance = 0.01; 
+            kArmConstants.kSmartMotionTolerance = 0.01;
 
             kArmConstants.kDefaultSlot = 0;
 
@@ -106,8 +107,8 @@ public class Constants {
             kElevatorConstants.kKp = 0.2;
             kElevatorConstants.kKi = 0.0;
             kElevatorConstants.kKd = 0.0;
-            kElevatorConstants.kSetpointTolerance = 0.25; 
-            kElevatorConstants.kSmartMotionTolerance = 0.25;
+            kElevatorConstants.kSetpointTolerance = 0.01; 
+            kElevatorConstants.kSmartMotionTolerance = 0.01;
 
             kElevatorConstants.kDefaultSlot = 0;
 
@@ -158,8 +159,8 @@ public class Constants {
             kWristConstants.kKp = 0.2;
             kWristConstants.kKi = 0.0;
             kWristConstants.kKd = 0.0;
-            kWristConstants.kSetpointTolerance = 0.25; 
-            kWristConstants.kSmartMotionTolerance = 0.25;
+            kWristConstants.kSetpointTolerance = 0.01; 
+            kWristConstants.kSmartMotionTolerance = 0.001;
 
             kWristConstants.kDefaultSlot = 0;
 
