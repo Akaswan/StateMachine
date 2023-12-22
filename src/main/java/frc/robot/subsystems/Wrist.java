@@ -7,7 +7,7 @@ public class Wrist extends ServoMotorSubsystem {
 
     private ArmFeedforward m_feedforward;
 
-    public Wrist(ServoMotorSubsystemConstants constants) {
+    public Wrist(SubsystemConstants constants) {
         super(constants);
 
         m_feedforward = new ArmFeedforward(constants.kKs, constants.kKg, constants.kKv, constants.kKa);
@@ -18,15 +18,10 @@ public class Wrist extends ServoMotorSubsystem {
     }
 
     @Override
-    public void subsystemPeriodic() {
+    public void lowLevelSubsystemPeriodic() {
         setFeedforward(m_feedforward.calculate(m_encoder.getPosition(), m_encoder.getVelocity()));
 
         Arm.wristLig.setAngle(m_currentState.getPosition());
-    }
-
-    @Override
-    public SubsystemType getSubsystemType() {
-        return SubsystemType.WRIST;
     }
 
     public enum WristState implements SubsystemState {

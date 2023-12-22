@@ -11,7 +11,7 @@ import frc.robot.commands.SetSubsystemState;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import frc.robot.subsystems.Wrist.WristState;
-import frc.robot.subsystems.manager.ServoMotorSubsystem.SubsystemState;
+import frc.robot.subsystems.manager.StatedSubsystem.SubsystemState;
 
 public class SuperstructureStateManager {
 
@@ -58,17 +58,17 @@ public class SuperstructureStateManager {
     }
 
     public ServoMotorSubsystem[] swapOrder(ServoMotorSubsystem[] originalOrder) {
-            ArrayList<ServoMotorSubsystem> newOrder = new ArrayList<>(Arrays.asList(originalOrder));
-            int interruptedIndex = 0;
-            for (int i = 0; i < originalOrder.length; i++) {
-                if (originalOrder[i].getName().toUpperCase().equals(getScheduledCommand().getName())) {
-                    interruptedIndex = i;
-                    break;
-                }
+        ArrayList<ServoMotorSubsystem> newOrder = new ArrayList<>(Arrays.asList(originalOrder));
+        int interruptedIndex = 0;
+        for (int i = 0; i < originalOrder.length; i++) {
+            if (originalOrder[i].getName().toUpperCase().equals(getScheduledCommand().getName())) {
+                interruptedIndex = i;
+                break;
             }
-            ServoMotorSubsystem removedItem = newOrder.remove(interruptedIndex);
-            newOrder.add(0, removedItem);
-            return newOrder.toArray(originalOrder);
+        }
+        ServoMotorSubsystem removedItem = newOrder.remove(interruptedIndex);
+        newOrder.add(0, removedItem);
+        return newOrder.toArray(originalOrder);
     }
 
     public SequentialCommandGroup setSuperstructureState(ServoMotorSubsystem[] order, SuperstructureState desiredState) {

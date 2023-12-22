@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -42,9 +41,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    // m_driverController.y().onTrue(m_manager.setSuperstructureState(new ServoMotorSubsystem[] {m_arm, m_elevator, m_wrist}, SuperstructureState.PLACE));
-    // m_driverController.x().onTrue(m_manager.setSuperstructureState(new ServoMotorSubsystem[] {m_arm, m_elevator, m_wrist}, SuperstructureState.HOME));
-    // m_driverController.b().onTrue(m_manager.setSuperstructureState(new ServoMotorSubsystem[] {m_arm, m_elevator, m_wrist}, SuperstructureState.PICKUP));
+
   }
 
   public Command getAutonomousCommand() {
@@ -52,17 +49,6 @@ public class RobotContainer {
   }
 
   public void periodic() {
-    // SmartDashboard.putString("Current State", m_manager.getCurrentState().getName());
-    // SmartDashboard.putString("Last State", m_manager.getLastHeldState().getName());
-    // SmartDashboard.putString("Desired State", m_manager.getDesiredState().getName());
-    // SmartDashboard.putNumber("Arm Transition Position", m_manager.getCurrentState().getArmState().getPosition());
-    // SmartDashboard.putString("Arm Subsystem transtiion name", m_manager.getCurrentState().getArmState().getName());
-    // SmartDashboard.putNumber("Elevator Transition Position", m_manager.getCurrentState().getElevatorState().getPosition());
-    // SmartDashboard.putNumber("Wrist Transition Position", m_manager.getCurrentState().getWristState().getPosition());
-    // SmartDashboard.putNumber("Poop test", ArmState.TRANSITION.getPosition());
-    // SmartDashboard.putString("Arm current state", m_arm.getCurrentState().getName());
-    // SmartDashboard.putNumber("Arm current position", m_arm.getCurrentState().getPosition());
-
     if (m_operatorController.getYButtonPressed()) {
       m_manager.setSuperstructureState(new ServoMotorSubsystem[] {m_arm, m_elevator, m_wrist}, SuperstructureState.PLACE).schedule();
     }

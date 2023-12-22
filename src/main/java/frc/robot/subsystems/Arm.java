@@ -17,7 +17,7 @@ public class Arm extends ServoMotorSubsystem {
     public static MechanismLigament2d armLig;
     public static MechanismLigament2d wristLig;
 
-    public Arm(ServoMotorSubsystemConstants constants) {
+    public Arm(SubsystemConstants constants) {
         super(constants);
 
         m_feedforward = new ArmFeedforward(constants.kKs, constants.kKg, constants.kKv, constants.kKa);
@@ -33,12 +33,7 @@ public class Arm extends ServoMotorSubsystem {
     }
 
     @Override
-    public SubsystemType getSubsystemType() {
-        return SubsystemType.ARM;
-    }
-
-    @Override
-    public void subsystemPeriodic() {
+    public void lowLevelSubsystemPeriodic() {
         setFeedforward(m_feedforward.calculate(m_encoder.getPosition(), m_encoder.getVelocity()));
 
 

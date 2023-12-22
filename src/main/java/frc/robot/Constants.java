@@ -7,8 +7,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import frc.robot.subsystems.Wrist.WristState;
-import frc.robot.subsystems.manager.ServoMotorSubsystem.CANSparkMaxConstants;
-import frc.robot.subsystems.manager.ServoMotorSubsystem.ServoMotorSubsystemConstants;
+import frc.robot.subsystems.manager.StatedSubsystem.CANSparkMaxConstants;
+import frc.robot.subsystems.manager.StatedSubsystem.SubsystemConstants;
+import frc.robot.subsystems.manager.StatedSubsystem.SubsystemType;
 
 public class Constants {
     public static final class OperatorConstants {
@@ -35,9 +36,11 @@ public class Constants {
             kArmSlaveConstants[0].kCurrentLimit = 80;
         }
 
-        public static final ServoMotorSubsystemConstants kArmConstants = new ServoMotorSubsystemConstants();
+        public static final SubsystemConstants kArmConstants = new SubsystemConstants();
         static {
             kArmConstants.kName = "Arm";
+
+            kArmConstants.kSubsystemType = SubsystemType.ARM;
 
             kArmConstants.kMasterConstants = kArmMasterConstants;
             kArmConstants.kSlaveConstants = kArmSlaveConstants;
@@ -94,9 +97,11 @@ public class Constants {
             kElevatorSlaveConstants[0].kCurrentLimit = 80;
         }
 
-        public static final ServoMotorSubsystemConstants kElevatorConstants = new ServoMotorSubsystemConstants();
+        public static final SubsystemConstants kElevatorConstants = new SubsystemConstants();
         static {
             kElevatorConstants.kName = "Elevator";
+
+            kElevatorConstants.kSubsystemType = SubsystemType.ELEVATOR;
 
             kElevatorConstants.kMasterConstants = kElevatorMasterConstants;
             kElevatorConstants.kSlaveConstants = kElevatorSlaveConstants;
@@ -146,9 +151,11 @@ public class Constants {
 
         public static final CANSparkMaxConstants[] kWristSlaveConstants = new CANSparkMaxConstants[0];
 
-        public static final ServoMotorSubsystemConstants kWristConstants = new ServoMotorSubsystemConstants();
+        public static final SubsystemConstants kWristConstants = new SubsystemConstants();
         static {
             kWristConstants.kName = "Wrist";
+
+            kWristConstants.kSubsystemType = SubsystemType.WRIST;
 
             kWristConstants.kMasterConstants = kWristMasterConstants;
             kWristConstants.kSlaveConstants = kWristSlaveConstants;

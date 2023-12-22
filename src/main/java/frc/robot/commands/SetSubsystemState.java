@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.manager.ServoMotorSubsystem;
 import frc.robot.subsystems.manager.SuperstructureStateManager;
-import frc.robot.subsystems.manager.ServoMotorSubsystem.SubsystemState;
+import frc.robot.subsystems.manager.StatedSubsystem.SubsystemState;
 import frc.robot.subsystems.manager.SuperstructureStateManager.SuperstructureState;
 
 public class SetSubsystemState extends Command {

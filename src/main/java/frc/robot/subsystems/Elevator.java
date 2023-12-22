@@ -7,7 +7,7 @@ public class Elevator extends ServoMotorSubsystem {
 
     private ElevatorFeedforward m_feedforward;
 
-    public Elevator(ServoMotorSubsystemConstants constants) {
+    public Elevator(SubsystemConstants constants) {
         super(constants);
 
         m_feedforward = new ElevatorFeedforward(constants.kKs, constants.kKg, constants.kKv, constants.kKa);
@@ -18,17 +18,12 @@ public class Elevator extends ServoMotorSubsystem {
     }
 
     @Override
-    public void subsystemPeriodic() {
+    public void lowLevelSubsystemPeriodic() {
         setFeedforward(m_feedforward.calculate(m_encoder.getPosition(), m_encoder.getVelocity()));
 
         Arm.root.setPosition(1.5, m_currentState.getPosition());
     }
 
-
-    @Override
-    public SubsystemType getSubsystemType() {
-        return SubsystemType.ELEVATOR;
-    }
 
     public enum ElevatorState implements SubsystemState {
         MANUAL(0, 0, "Manual"),
