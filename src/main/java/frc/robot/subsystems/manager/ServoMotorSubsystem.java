@@ -154,7 +154,7 @@ public abstract class ServoMotorSubsystem extends SubsystemBase {
   }
 
   public double getPosition() {
-    return m_encoder.getPosition();
+    return RobotBase.isReal() ? m_encoder.getPosition() : m_currentState.getPosition();
   }
 
   public double getVelocity() {

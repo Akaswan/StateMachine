@@ -7,12 +7,14 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.manager.ServoMotorSubsystem;
+import frc.robot.subsystems.manager.SuperstructureStateManager;
 import frc.robot.subsystems.manager.ServoMotorSubsystem.SubsystemState;
 import frc.robot.subsystems.manager.SuperstructureStateManager.SuperstructureState;
 
 public class SetSubsystemState extends Command {
   /** Creates a new SetMechState. */
   private ServoMotorSubsystem m_subsystem;
+  private SuperstructureStateManager m_manager = RobotContainer.m_manager; 
 
   private SubsystemState m_state;
   private SuperstructureState m_superStructureState;
@@ -31,6 +33,7 @@ public class SetSubsystemState extends Command {
     m_state = null;
 
     addRequirements(m_subsystem);
+    setName(m_subsystem.getSubsystemType().name());
   }
 
   // Called when the command is initially scheduled.
@@ -52,6 +55,8 @@ public class SetSubsystemState extends Command {
     }
 
     m_subsystem.setState(m_state);
+
+    m_manager.setScheduledCommand(this);
     
   }
 
@@ -71,7 +76,8 @@ public class SetSubsystemState extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

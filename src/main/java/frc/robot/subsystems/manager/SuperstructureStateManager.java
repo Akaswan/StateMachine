@@ -1,5 +1,10 @@
 package frc.robot.subsystems.manager;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.SetSubsystemState;
@@ -14,7 +19,8 @@ public class SuperstructureStateManager {
     private SuperstructureState m_currentState;
     private SuperstructureState m_desiredState;
 
-    // Example states
+    private Command m_scheduledCommand;
+    private SequentialCommandGroup m_scheduledSequentialCommandGroup = new SequentialCommandGroup();
 
     public SuperstructureStateManager(SuperstructureState initialState) {
         m_currentState = initialState;
@@ -43,10 +49,36 @@ public class SuperstructureStateManager {
         return m_lastHeldState;
     }
 
+    public void setScheduledCommand(Command command) {
+        m_scheduledCommand = command;
+    }
+
+    public Command getScheduledCommand() {
+        return m_scheduledCommand != null ? m_scheduledCommand : new Command() {};
+    }
+
+    public ServoMotorSubsystem[] swapOrder(ServoMotorSubsystem[] originalOrder) {
+            ArrayList<ServoMotorSubsystem> newOrder = new ArrayList<>(Arrays.asList(originalOrder));
+            int interruptedIndex = 0;
+            for (int i = 0; i < originalOrder.length; i++) {
+                if (originalOrder[i].getName().toUpperCase().equals(getScheduledCommand().getName())) {
+                    interruptedIndex = i;
+                    break;
+                }
+            }
+            ServoMotorSubsystem removedItem = newOrder.remove(interruptedIndex);
+            newOrder.add(0, removedItem);
+            return newOrder.toArray(originalOrder);
+    }
+
     public SequentialCommandGroup setSuperstructureState(ServoMotorSubsystem[] order, SuperstructureState desiredState) {
         SequentialCommandGroup outputCommand = new SequentialCommandGroup();
         setDesiredState(desiredState);
         setCurrentState(SuperstructureState.TRANSITION);
+
+        if (CommandScheduler.getInstance().isScheduled(m_scheduledSequentialCommandGroup)) {
+            order = swapOrder(order);
+        }
 
         for (int i = 0; i < order.length; i++) {
             outputCommand.addCommands(new SetSubsystemState(order[i], desiredState));
@@ -54,6 +86,7 @@ public class SuperstructureStateManager {
 
         outputCommand.addCommands(new InstantCommand(() -> {m_currentState = desiredState; m_lastHeldState = desiredState;}));
         
+        m_scheduledSequentialCommandGroup = outputCommand;
         return outputCommand;
     }
 
