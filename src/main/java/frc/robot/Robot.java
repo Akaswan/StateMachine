@@ -27,8 +27,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.subsystems.LED;
-import frc.robot.subsystems.LED.LEDState;
+import frc.robot.subsystems.LED.LED;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -57,8 +56,6 @@ public class Robot extends TimedRobot {
     }
 
     SignalLogger.enableAutoLogging(false);
-
-    LED.setState(LEDState.RED);
 
 
     // Command disabledCommand = new PathPlannerAuto("Dummy-Auto-Fix-Auto").ignoringDisable(true);
@@ -123,7 +120,6 @@ public class Robot extends TimedRobot {
     );
     // RobotContainer.m_drivebase.updateEstimatorWithPose(RobotContainer.m_drivebase.getPose());
 
-    LED.setState(LEDState.TEAL_STOW);
   }
 
   /** This function is called periodically during operator control. */
@@ -133,7 +129,6 @@ public class Robot extends TimedRobot {
   /** This function is called once when the robot is disabled. */
   @Override
   public void disabledInit() {
-    LED.setState(LEDState.RED);
 
     if (autonInitCommandRun == false) {
       Command autonInitCommand = FollowPathCommand.warmupCommand();

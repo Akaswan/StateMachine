@@ -309,13 +309,10 @@ public class SwerveModule extends SubsystemBase{
       Thread.sleep(200);
     } catch (Exception e) {}
 
-    System.out.println(m_driveMotor.burnFlash());
-
     try {
       Thread.sleep(200);
     } catch (Exception e) {}
 
-    System.out.println(m_turningMotor.burnFlash());
   }
 
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {

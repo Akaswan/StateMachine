@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.lib.utilities.RGB;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.drivebase.TeleopSwerve;
@@ -27,12 +28,15 @@ import frc.robot.commands.parallel.SetVoltageStates;
 import frc.robot.commands.sequential.FieldRelativeLaunch;
 import frc.robot.commands.superstructure.ManualMultiMotorPositionSubsystem;
 import frc.robot.commands.superstructure.ManualPositionSubsystem;
+import frc.robot.commands.superstructure.SetLEDEffect;
 import frc.robot.commands.superstructure.SetPositionSubsystemState;
 import frc.robot.commands.superstructure.SetVelocitySubsystemState;
 import frc.robot.commands.superstructure.SetVoltageSubsystemState;
 import frc.robot.commands.waits.WaitForIntakeReady;
-import frc.robot.subsystems.LED;
 import frc.robot.subsystems.RobotStateManager;
+import frc.robot.subsystems.LED.LED;
+import frc.robot.subsystems.LED.effects.BreatheEffect;
+import frc.robot.subsystems.LED.effects.RainbowEffect;
 import frc.robot.subsystems.RobotStateManager.RobotState;
 import frc.robot.subsystems.intake.ElevatorLift;
 import frc.robot.subsystems.intake.IntakeFlywheel;
@@ -85,12 +89,11 @@ public class RobotContainer {
   public static LauncherHold m_launcherHold = LauncherHold.getInstance();
   public static LauncherWrist m_launcherWrist = LauncherWrist.getInstance();
 
+  public final LED bruh = new LED();
+
   public static RobotStateManager m_robotStateManager = RobotStateManager.getInstance();
 
   public static SwerveDrive m_drivebase = SwerveDrive.getInstance();
-
-  
-  public static LED m_led = LED.getInstance();
   
   // SENDABLE CHOOSER \\
   public static SendableChooser<Command> autoChooser;
@@ -247,11 +250,13 @@ public class RobotContainer {
     m_driverController.circle().onFalse(new InstantCommand(() -> m_drivebase.setSpeakerTracking(false)));
 
     ///// INTAKE /////
-    m_operatorController.a().onTrue(m_robotStateManager.setSuperstructureState(RobotState.BEAM_BREAK_INTAKING));
+    // m_operatorController.a().onTrue(m_robotStateManager.setSuperstructureState(RobotState.BEAM_BREAK_INTAKING));
+    m_operatorController.a().onTrue(new SetLEDEffect(new BreatheEffect(new RGB(83, 191, 237), 1)));
+    m_operatorController.b().onTrue(new SetLEDEffect(null));
 
     m_operatorController.rightStick().onTrue(m_robotStateManager.setSuperstructureState(RobotState.TOF_INTAKING));
 
-    m_operatorController.b().onTrue(m_robotStateManager.setSuperstructureState(RobotState.TRAVEL));
+    // m_operatorController.b().onTrue(m_robotStateManager.setSuperstructureState(RobotState.TRAVEL));
     
     m_operatorController.x().onTrue(m_robotStateManager.setSuperstructureState(RobotState.AMP));
 

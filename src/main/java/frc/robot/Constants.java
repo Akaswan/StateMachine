@@ -23,6 +23,8 @@ import frc.lib.utilities.SwerveModuleConstants;
  */
 public final class Constants {
 
+  public static final double kdt = 0.02;
+
   public static final Mode kCurrentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
 
   public static final boolean kInfoMode = true;
@@ -186,6 +188,11 @@ public final class Constants {
     public static final int kIntakeWristID = 31;
     public static final int kIntakeHoldID = 36;
     // CLIMB \\
+  }
+
+  public class LEDConstants {
+    public static final int kLEDLength = 50;
+    public static final int kLEDPort = 0;
   }
 
 
