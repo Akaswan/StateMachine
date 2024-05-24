@@ -4,7 +4,9 @@
 
 package frc.robot.commands.superstructure;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.LED.LED;
 import frc.robot.subsystems.LED.LED.LEDEffect;
 
@@ -18,12 +20,37 @@ public class SetLEDEffect extends Command {
   private double m_runTime;
   private LEDEffect m_queuedEffect = null;
 
+  private LED m_led = LED.getInstance();
+
+    /**
+   *
+   *
+   * <h3>SetLEDEffect</h3>
+   *
+   * Sets the effect of the LED class then ends instantly
+   *
+   * @param effect
+   */
   public SetLEDEffect(LEDEffect effect) {
     m_effect = effect;
 
-    addRequirements(RobotContainer.m_led);
+    addRequirements(RobotContainer.m_LED);
   }
 
+    /**
+   *
+   *
+   * <h3>SetLEDEffect</h3>
+   *
+   * Sets the effect of the LED class then ends instantly
+   * 
+   * When using this in a command composition create a <code>new ScheduleCommand()</code> 
+   * with this command as its parameter
+   *
+   * @param effect       The LEDEffect to be applied immediately.
+   * @param runTime      The duration (in seconds) for which the effect should run.
+   * @param queuedEffect The LEDEffect to be applied after the current effect finishes.
+   */
   public SetLEDEffect(LEDEffect effect, double runTime, LEDEffect queuedEffect) {
     this(effect);
 
@@ -34,7 +61,7 @@ public class SetLEDEffect extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    LED.setEffect(m_effect);
+    m_led.setEffect(m_effect);
   }
 
   @Override
@@ -45,13 +72,13 @@ public class SetLEDEffect extends Command {
   @Override
   public void end(boolean interrupted) {
     if (m_queuedEffect != null) {
-      LED.setEffect(m_queuedEffect);
+      m_led.setEffect(m_queuedEffect);
     }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_timePassed 
+    return m_timePassed >= m_runTime;
   }
 }

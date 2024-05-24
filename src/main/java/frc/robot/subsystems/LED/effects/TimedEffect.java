@@ -1,5 +1,7 @@
 package frc.robot.subsystems.LED.effects;
 
+import frc.robot.Constants;
+
 public abstract class TimedEffect {
     protected double m_frameTime;
     protected double m_timePassed = 0;

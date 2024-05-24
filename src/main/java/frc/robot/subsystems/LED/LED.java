@@ -7,16 +7,17 @@ package frc.robot.subsystems.LED;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.LEDConstants;
 
 public class LED extends SubsystemBase {
   /** Creates a new LED. */
 
-  public static AddressableLED m_led;
-  public static AddressableLEDBuffer m_ledBuffer;
+  private static LED m_instance = null;
 
-  private static LEDEffect m_currentEffect;
+  public AddressableLED m_led;
+  public AddressableLEDBuffer m_ledBuffer;
+
+  private LEDEffect m_currentEffect;
 
   public LED() {
     m_led = new AddressableLED(LEDConstants.kLEDPort);
@@ -27,7 +28,15 @@ public class LED extends SubsystemBase {
     m_led.start();
   }
 
-  public static void setEffect(LEDEffect effect) {
+  public static LED getInstance() {
+    if (m_instance == null) {
+      m_instance = new LED();
+    }
+
+    return m_instance;
+  }
+
+  public void setEffect(LEDEffect effect) {
     m_currentEffect = effect;
   }
 

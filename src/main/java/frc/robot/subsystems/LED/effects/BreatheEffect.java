@@ -2,7 +2,6 @@ package frc.robot.subsystems.LED.effects;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import frc.lib.utilities.RGB;
-import frc.robot.Constants;
 import frc.robot.subsystems.LED.LED.LEDEffect;
 
 public class BreatheEffect extends TimedEffect implements LEDEffect{
