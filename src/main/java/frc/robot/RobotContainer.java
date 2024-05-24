@@ -89,7 +89,7 @@ public class RobotContainer {
   public static LauncherHold m_launcherHold = LauncherHold.getInstance();
   public static LauncherWrist m_launcherWrist = LauncherWrist.getInstance();
 
-  public final LED bruh = new LED();
+  public static final LED m_led = new LED();
 
   public static RobotStateManager m_robotStateManager = RobotStateManager.getInstance();
 

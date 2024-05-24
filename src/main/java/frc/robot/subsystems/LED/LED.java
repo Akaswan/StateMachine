@@ -18,8 +18,6 @@ public class LED extends SubsystemBase {
 
   private static LEDEffect m_currentEffect;
 
-  private static double m_effectTimeRun = -1;
-
   public LED() {
     m_led = new AddressableLED(LEDConstants.kLEDPort);
     m_ledBuffer = new AddressableLEDBuffer(LEDConstants.kLEDLength);
@@ -33,22 +31,8 @@ public class LED extends SubsystemBase {
     m_currentEffect = effect;
   }
 
-  public static void setEffect(LEDEffect effect, double effectRunTime) {
-    m_currentEffect = effect;
-    m_effectTimeRun = effectRunTime;
-  }
-
   @Override
   public void periodic() {
-
-    if (m_effectTimeRun != -1) {
-      if (m_effectTimeRun - Constants.kdt <= 0) {
-        m_effectTimeRun = -1;
-      } else {
-        m_effectTimeRun -= Constants.kdt;
-      }
-    }
-
     if (m_currentEffect != null) {
       m_currentEffect.runEffect(m_ledBuffer);
     } else {

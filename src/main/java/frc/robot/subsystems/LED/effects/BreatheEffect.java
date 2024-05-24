@@ -5,15 +5,13 @@ import frc.lib.utilities.RGB;
 import frc.robot.Constants;
 import frc.robot.subsystems.LED.LED.LEDEffect;
 
-public class BreatheEffect implements LEDEffect{
+public class BreatheEffect extends TimedEffect implements LEDEffect{
 
     private RGB m_color;
-    private double m_frameTime;
-    private double m_timePassed = 0;
 
     public BreatheEffect(RGB color, double frameTime) {
+        super(frameTime);
         m_color = color;
-        m_frameTime = frameTime;
     }
 
     @Override
@@ -24,7 +22,7 @@ public class BreatheEffect implements LEDEffect{
             buffer.setRGB(i, (int) (m_color.red * multiplier), (int) (m_color.green * multiplier), (int) (m_color.blue * multiplier));
         }
 
-        m_timePassed = (m_timePassed + Constants.kdt) % m_frameTime;
+        incrementTime();
     }
     
 }
