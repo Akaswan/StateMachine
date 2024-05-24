@@ -1,0 +1,98 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.900656053564359,
+        "y": 6.71165450439009
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.153681704174567,
+        "y": 6.75701013041952
+      },
+      "isLocked": false,
+      "linkedName": "WN1Prepare"
+    },
+    {
+      "anchor": {
+        "x": 2.3948792456474473,
+        "y": 7.140835053573465
+      },
+      "prevControl": {
+        "x": 2.5726815344641856,
+        "y": 6.930279711553641
+      },
+      "nextControl": {
+        "x": 2.2543597574012635,
+        "y": 7.307239710707105
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.8082090218234488,
+        "y": 7.562167196406465
+      },
+      "prevControl": {
+        "x": 1.9376348662607235,
+        "y": 7.395762539272827
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.55,
+      "rotationDegrees": 11.23,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Intake",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "intake"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "ampPrepare"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Wing Note 1",
+  "previewStartingState": {
+    "rotation": 40.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

@@ -1,0 +1,70 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.75,
+        "y": 4.48552998006897
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.2153924307848631,
+        "y": 4.065180438053184
+      },
+      "isLocked": false,
+      "linkedName": "StartPos3"
+    },
+    {
+      "anchor": {
+        "x": 2.537562767433229,
+        "y": 3.0883530997831223
+      },
+      "prevControl": {
+        "x": 2.142885055000881,
+        "y": 3.3744944412965725
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "RS3L"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Down",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "downOff"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -45.80692945510243,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Start Pos 3",
+  "previewStartingState": {
+    "rotation": -60.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

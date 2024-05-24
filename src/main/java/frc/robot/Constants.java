@@ -1,196 +1,203 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot;
 
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.pathplanner.lib.util.PIDConstants;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
+import frc.lib.utilities.SwerveModuleConstants;
 
-import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.subsystems.Arm.ArmState;
-import frc.robot.subsystems.Elevator.ElevatorState;
-import frc.robot.subsystems.Wrist.WristState;
-import frc.robot.subsystems.manager.StatedSubsystem.CANSparkMaxConstants;
-import frc.robot.subsystems.manager.StatedSubsystem.SubsystemConstants;
-import frc.robot.subsystems.manager.StatedSubsystem.SubsystemType;
+/**
+ * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
+ * constants. This class should not be used for any other purpose. All constants should be declared
+ * globally (i.e. public static). Do not put anything functional in this class.
+ *
+ * <p>It is advised to statically import this class (or one of its inner classes) wherever the
+ * constants are needed, to reduce verbosity.
+ */
+public final class Constants {
 
-public class Constants {
-    public static final class OperatorConstants {
-        public static final int kDriverControllerPort = 0;
-        public static final int kOperatorControllerPort = 0;
-    }
+  public static final Mode kCurrentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
 
-    public static final class ArmConstants {
+  public static final boolean kInfoMode = true;
 
-        public static final CANSparkMaxConstants kArmMasterConstants = new CANSparkMaxConstants();
-        static {
-            kArmMasterConstants.kID = 5;
-            kArmMasterConstants.kIdleMode = IdleMode.kBrake;
-            kArmMasterConstants.kMotorType = MotorType.kBrushless;
-            kArmMasterConstants.kCurrentLimit = 80;
-        }
+  // // DRIVEBASE \\ \\
 
-        public static final CANSparkMaxConstants[] kArmSlaveConstants = new CANSparkMaxConstants[1];
-        static {
-            kArmSlaveConstants[0] = new CANSparkMaxConstants();
-            kArmSlaveConstants[0].kID = 15;
-            kArmSlaveConstants[0].kIdleMode = IdleMode.kBrake;
-            kArmSlaveConstants[0].kMotorType = MotorType.kBrushless;
-            kArmSlaveConstants[0].kCurrentLimit = 80;
-        }
+  // Make sure to measure these with as much presicion as possible, as it will have great affect on
+  // path planner autos and teleop driving
 
-        public static final SubsystemConstants kArmConstants = new SubsystemConstants();
-        static {
-            kArmConstants.kName = "Arm";
+  public static final class OperatorConstants {
+    public static final int kDriverControllerPort = 0;
+    public static final int kOperatorControllerPort = 1;
+  }
 
-            kArmConstants.kSubsystemType = SubsystemType.ARM;
+  public static final class AutoConstants {
+    public static Translation2d[] kNotePlacements = new Translation2d[] {
+      new Translation2d(7.68, 7.44),
+      new Translation2d(7.68, 5.78),
+      new Translation2d(7.68, 4.10),
+      new Translation2d(7.68, 2.44),
+      new Translation2d(7.68, 0.78)
+    };
+  }
 
-            kArmConstants.kMasterConstants = kArmMasterConstants;
-            kArmConstants.kSlaveConstants = kArmSlaveConstants;
+  public static final class DriveConstants {
 
-            kArmConstants.kHomePosition = 0.0;
-            kArmConstants.kRotationsPerUnitDistance = 360 / 100;
+    public static double drivekp = 0.15751;
+    public static double driveki = 0.0;
+    public static double drivekd = 0.0;
+    public static double drivekff = 0.23983;
+    public static double driverampRate = 0.1;
 
-            kArmConstants.kKp = 0.2;
-            kArmConstants.kKi = 0.0;
-            kArmConstants.kKd = 0.0;
-            kArmConstants.kSetpointTolerance = 0.1; 
-            kArmConstants.kSmartMotionTolerance = 0.1;
+    public static double turnkp = 0.02;
+    public static double turnki = 0.0;
+    public static double turnkd = 0.01;
+    public static double turnkff = 0.0;
 
-            kArmConstants.kDefaultSlot = 0;
+    public static double kDriveModifier = 2;
+    public static double kTurnModifier = 3;
 
-            kArmConstants.kMaxVelocity = 200;
-            kArmConstants.kMaxAcceleration = 200;
+    /* The lower this is the more you want odometry to trust the april tags
+    Scales based on the percentage of an april tag in view
+    Dont do anything below 0*/
+    public static double kAprilTagTrustMultiplier = 1.0;
 
-            kArmConstants.kKs = 0.0;
-            kArmConstants.kKg = 0.0;
-            kArmConstants.kKv = 0.0;
-            kArmConstants.kKa = 0.0;
+    public static int kPigeon = 47;
 
-            kArmConstants.kMaxPosition = 150.0;
-            kArmConstants.kMinPosition = 0.0;
+    public static double kSteerVelocityDeadzone = 0.005;
 
-            kArmConstants.kManualAxis = XboxController.Axis.kRightY.value;
-            kArmConstants.kManualMultiplier = 1;
-            kArmConstants.kManualDeadZone = .1;
+    public static final double kTrackWidth =
+        Units.inchesToMeters(20.67); // Distance between centers of right and left wheels on robot
 
-            kArmConstants.kInitialState = ArmState.HOME;
-            kArmConstants.kManualState = ArmState.MANUAL;
-            kArmConstants.kTransitionState = ArmState.TRANSITION;
-            kArmConstants.kSetpointSwitchState = ArmState.SETPOINT_SWITCH;
-        }
-    }
+    public static final double kWheelBase =
+        Units.inchesToMeters(20.67); // Distance between centers of front and back wheels on robot
 
-    public static final class ElevatorConstants {
+    public static final double kDriveBaseRadius =
+        Math.hypot(
+            Units.inchesToMeters(32) / 2,
+            Units.inchesToMeters(32)
+                / 2); // Distance from center of the robot to corner of the bumpers
 
-        public static final CANSparkMaxConstants kElevatorMasterConstants = new CANSparkMaxConstants();
-        static {
-            kElevatorMasterConstants.kID = 6;
-            kElevatorMasterConstants.kIdleMode = IdleMode.kBrake;
-            kElevatorMasterConstants.kMotorType = MotorType.kBrushless;
-            kElevatorMasterConstants.kCurrentLimit = 80;
-        }
+    public static final double kMaxMetersPerSecond =
+        Units.feetToMeters(20.1); // Run drivebase at max speed on the ground to find top speed
 
-        public static final CANSparkMaxConstants[] kElevatorSlaveConstants = new CANSparkMaxConstants[1];
-        static {
-            kElevatorSlaveConstants[0] = new CANSparkMaxConstants();
-            kElevatorSlaveConstants[0].kID = 16;
-            kElevatorSlaveConstants[0].kIdleMode = IdleMode.kBrake;
-            kElevatorSlaveConstants[0].kMotorType = MotorType.kBrushless;
-            kElevatorSlaveConstants[0].kCurrentLimit = 80;
-        }
+    public static final double kDriveGearRatio = 5.90318; // MK4i L2 with 16t driving gear, find on sds website
 
-        public static final SubsystemConstants kElevatorConstants = new SubsystemConstants();
-        static {
-            kElevatorConstants.kName = "Elevator";
+    public static final double kTurnGearRatio =
+        150.0 / 7.0; // MK4i turning ratio MK4i Neo, find on sds website
 
-            kElevatorConstants.kSubsystemType = SubsystemType.ELEVATOR;
+    public static final double kWheelDiameter = Units.inchesToMeters(3.915); // Wheel diameter
 
-            kElevatorConstants.kMasterConstants = kElevatorMasterConstants;
-            kElevatorConstants.kSlaveConstants = kElevatorSlaveConstants;
+    public static final double kMaxRotationRadiansPerSecond =
+        Math.PI * 3.0; // Just kind of find what works, this is from 930 2023
 
-            kElevatorConstants.kHomePosition = 0.0;
-            kElevatorConstants.kRotationsPerUnitDistance = 10;
+    public static final double kRegularSpeed = 1; // Regular speed multiplier of robot
 
-            kElevatorConstants.kKp = 0.2;
-            kElevatorConstants.kKi = 0.0;
-            kElevatorConstants.kKd = 0.0;
-            kElevatorConstants.kSetpointTolerance = 0.1; 
-            kElevatorConstants.kSmartMotionTolerance = 0.1;
+    public static final double kSlowSpeed = .4; // Slow speed multiplier of robot
 
-            kElevatorConstants.kDefaultSlot = 0;
+    public static final int kFrontLeftDriveMotor = 12;
+    public static final int kFrontLeftSteerMotor = 11;
+    public static final int kFrontLeftSteerEncoder = 1;
+    public static final double kFrontLeftOffset = 0.617676; //0.637451 ; // 0.719971; //0.597900; // In Rotations not degrees
+    public static final SwerveModuleConstants kFrontLeft =
+        new SwerveModuleConstants(
+            kFrontLeftDriveMotor, kFrontLeftSteerMotor, kFrontLeftSteerEncoder, kFrontLeftOffset);
 
-            kElevatorConstants.kMaxVelocity = 1;
-            kElevatorConstants.kMaxAcceleration = .5;
+    public static final int kFrontRightDriveMotor = 18;
+    public static final int kFrontRightSteerMotor = 17;
+    public static final int kFrontRightSteerEncoder = 7;
+    public static final double kFrontRightSteerOffset = 0.046875; // 0.052979; //0.049561; // In Rotations not degrees
+    public static final SwerveModuleConstants kFrontRight =
+        new SwerveModuleConstants(
+            kFrontRightDriveMotor,
+            kFrontRightSteerMotor,
+            kFrontRightSteerEncoder,
+            kFrontRightSteerOffset);
 
-            kElevatorConstants.kKs = 0.0;
-            kElevatorConstants.kKg = 0.0;
-            kElevatorConstants.kKv = 0.0;
-            kElevatorConstants.kKa = 0.0;
+    public static final int kBackLeftDriveMotor = 14;
+    public static final int kBackLeftSteerMotor = 13;
+    public static final int kBackLeftSteerEncoder = 3;
+    public static final double kBackLeftSteerOffset = 0.503662; //0.502930  ; //0.504395 ; // In Rotations not degrees
+    public static final SwerveModuleConstants kBackLeft =
+        new SwerveModuleConstants(
+            kBackLeftDriveMotor, kBackLeftSteerMotor, kBackLeftSteerEncoder, kBackLeftSteerOffset);
 
-            kElevatorConstants.kMaxPosition = 3.0;
-            kElevatorConstants.kMinPosition = 0.0;
+    public static final int kBackRightDriveMotor = 16;
+    public static final int kBackRightSteerMotor = 15;
+    public static final int kBackRightSteerEncoder = 5;
+    public static final double kBackRightSteerOffset = 0.831055;//0.832520 ; //0.829590 ;//0.834473; // In Rotations not degrees
+    public static final SwerveModuleConstants kBackRight =
+        new SwerveModuleConstants(
+            kBackRightDriveMotor,
+            kBackRightSteerMotor,
+            kBackRightSteerEncoder,
+            kBackRightSteerOffset);
 
-            kElevatorConstants.kManualAxis = XboxController.Axis.kLeftY.value;
-            kElevatorConstants.kManualMultiplier = .05;
-            kElevatorConstants.kManualDeadZone = .1;
+    public static final double kDriveRevToMeters = ((kWheelDiameter * Math.PI) / kDriveGearRatio);
+    public static final double kDriveRpmToMetersPerSecond = kDriveRevToMeters / 60.0;
+    public static final double kTurnRotationsToDegrees = 360.0 / kTurnGearRatio;
 
-            kElevatorConstants.kInitialState = ElevatorState.HOME;
-            kElevatorConstants.kManualState = ElevatorState.MANUAL;
-            kElevatorConstants.kTransitionState = ElevatorState.TRANSITION;
-            kElevatorConstants.kSetpointSwitchState = ElevatorState.SETPOINT_SWITCH;
-        }
-    }
+    public static final Translation2d[] kModuleTranslations = {
+      new Translation2d(kWheelBase / 2, kTrackWidth / 2),
+      new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+      new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
+      new Translation2d(-kWheelBase / 2, -kTrackWidth / 2)
+    };
 
-    public static final class WristConstants {
+    public static final SwerveDriveKinematics kDriveKinematics =
+        new SwerveDriveKinematics(kModuleTranslations);
 
-        public static final CANSparkMaxConstants kWristMasterConstants = new CANSparkMaxConstants();
-        static {
-            kWristMasterConstants.kID = 7;
-            kWristMasterConstants.kIdleMode = IdleMode.kBrake;
-            kWristMasterConstants.kMotorType = MotorType.kBrushless;
-            kWristMasterConstants.kCurrentLimit = 80;
-        }
+    public static final PIDConstants kPathPlannerTranslationPID = new PIDConstants(5.0, 0, 0);
+    public static final PIDConstants kPathPlannerRotationPID = new PIDConstants(5.0, 0, 0);
 
-        public static final CANSparkMaxConstants[] kWristSlaveConstants = new CANSparkMaxConstants[0];
+    public static final SwerveModuleState[] kXWheels = {
+      new SwerveModuleState(0, Rotation2d.fromDegrees(45)),
+      new SwerveModuleState(0, Rotation2d.fromDegrees(-45)),
+      new SwerveModuleState(0, Rotation2d.fromDegrees(135)),
+      new SwerveModuleState(0, Rotation2d.fromDegrees(-135)),
+    };
 
-        public static final SubsystemConstants kWristConstants = new SubsystemConstants();
-        static {
-            kWristConstants.kName = "Wrist";
+    public static final Translation2d kBlueSpeakerPosition = new Translation2d(0, 5.56);
+    public static final Translation2d kRedSpeakerPosition = new Translation2d(16.53, 5.56);
+    public static final Translation2d kBlueAmpPassPosition = new Translation2d(1.32, 7.29);
+    public static final Translation2d kRedAmpPassPosition = new Translation2d(14.72, 5.56);
+    public static final Translation2d kBlueAmpPosition = new Translation2d(1.82, 7.69);
+    public static final Translation2d kRedAmpPosition = new Translation2d(14.71, 7.69);
+  }
 
-            kWristConstants.kSubsystemType = SubsystemType.WRIST;
+  public class MotorConstants {
+    // LAUNCHER \\
+    public static final int kLauncherTopFlywheelID = 43;
+    public static final int kLauncherBottomFlywheelID = 41;
+    public static final int kLauncherWristID = 40;
+    public static final int kLauncherHoldID = 44;
 
-            kWristConstants.kMasterConstants = kWristMasterConstants;
-            kWristConstants.kSlaveConstants = kWristSlaveConstants;
+    // INTAKE \\
+    public static final int kElevatorLiftRightID = 20;
+    public static final int kElevatorLiftLeftID = 21;
+    
+    public static final int kIntakeFlywheelID = 34;
+    public static final int kIntakeWristID = 31;
+    public static final int kIntakeHoldID = 36;
+    // CLIMB \\
+  }
 
-            kWristConstants.kHomePosition = 0.0;
-            kWristConstants.kRotationsPerUnitDistance = 360 / 100;
 
-            kWristConstants.kKp = 0.2;
-            kWristConstants.kKi = 0.0;
-            kWristConstants.kKd = 0.0;
-            kWristConstants.kSetpointTolerance = 0.1; 
-            kWristConstants.kSmartMotionTolerance = 0.1;
 
-            kWristConstants.kDefaultSlot = 0;
+  public static enum Mode {
+    /** Running on a real robot. */
+    REAL,
 
-            kWristConstants.kMaxVelocity = 150;
-            kWristConstants.kMaxAcceleration = 140;
+    /** Running a physics simulator. */
+    SIM,
 
-            kWristConstants.kKs = 0.0;
-            kWristConstants.kKg = 0.0;
-            kWristConstants.kKv = 0.0;
-            kWristConstants.kKa = 0.0;
-
-            kWristConstants.kMaxPosition = 160;
-            kWristConstants.kMinPosition = -160;
-
-            kWristConstants.kManualAxis = XboxController.Axis.kRightX.value;
-            kWristConstants.kManualMultiplier = 1;
-            kWristConstants.kManualDeadZone = .1;
-
-            kWristConstants.kInitialState = WristState.HOME;
-            kWristConstants.kManualState = WristState.MANUAL;
-            kWristConstants.kTransitionState = WristState.TRANSITION;
-            kWristConstants.kSetpointSwitchState = WristState.SETPOINT_SWITCH;
-        }
-    }
-
+    /** Replaying from a log file. */
+    REPLAY
+  }
 }

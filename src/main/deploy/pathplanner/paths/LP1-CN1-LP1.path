@@ -1,0 +1,92 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.4157206775952025,
+        "y": 6.512182255133741
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.49504402939506,
+        "y": 6.766283791264741
+      },
+      "isLocked": false,
+      "linkedName": "LaunchPos1"
+    },
+    {
+      "anchor": {
+        "x": 7.798776678634438,
+        "y": 7.312560210706008
+      },
+      "prevControl": {
+        "x": 7.818817620335423,
+        "y": 7.266752343960898
+      },
+      "nextControl": {
+        "x": 7.778735736933452,
+        "y": 7.358368077451117
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.4157206775952025,
+        "y": 6.512182255133741
+      },
+      "prevControl": {
+        "x": 4.50428873256915,
+        "y": 6.74779438491656
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "LaunchPos1"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Intake",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "intake"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "fieldPrepare"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.5,
+    "maxAcceleration": 4.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 14.43,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Launch Pos 1",
+  "previewStartingState": {
+    "rotation": 14.43,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

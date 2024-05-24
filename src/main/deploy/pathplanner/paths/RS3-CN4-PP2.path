@@ -1,0 +1,142 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.68,
+        "y": 4.438407050851191
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.6140702551675372,
+        "y": 3.4667636902841377
+      },
+      "isLocked": false,
+      "linkedName": "StartPos3Real"
+    },
+    {
+      "anchor": {
+        "x": 4.692556412139851,
+        "y": 1.7749830094254784
+      },
+      "prevControl": {
+        "x": 3.2334024435770345,
+        "y": 2.220452453905355
+      },
+      "nextControl": {
+        "x": 6.151710380702667,
+        "y": 1.329513564945601
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.835755491330802,
+        "y": 2.14477113638912
+      },
+      "prevControl": {
+        "x": 7.366640669481781,
+        "y": 1.2568037950320436
+      },
+      "nextControl": {
+        "x": 8.163658914612686,
+        "y": 2.7654454733155407
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.034610429581219,
+        "y": 4.1878505378632385
+      },
+      "prevControl": {
+        "x": 6.197438471909753,
+        "y": 3.841154387016335
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "PoopPoint2"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 2.05,
+      "rotationDegrees": 40.0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.2,
+      "rotationDegrees": -49.11294883553208,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Launch",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.25,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 1.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "Intake",
+      "waypointRelativePos": 1.2,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Launch",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "fieldLaunch"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.5,
+    "maxAcceleration": 4.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -39.83606175898768,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Start Pos 3",
+  "previewStartingState": {
+    "rotation": -60.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

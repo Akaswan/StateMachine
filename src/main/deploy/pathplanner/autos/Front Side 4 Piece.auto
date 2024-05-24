@@ -1,0 +1,80 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "enableAutoVision"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "turnShoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "L-WN2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "turnShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "WN2-CN3-LP2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "turnShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LP2-CN2-LP2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "turnShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "travel"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Start Pos 2",
+  "choreoAuto": false
+}

@@ -1,0 +1,131 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.74,
+        "y": 6.618654443414426
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.447665598029663,
+        "y": 6.711654504389838
+      },
+      "isLocked": false,
+      "linkedName": "StartPos1"
+    },
+    {
+      "anchor": {
+        "x": 2.3998700249610394,
+        "y": 6.7856121297825664
+      },
+      "prevControl": {
+        "x": 2.2051865912943236,
+        "y": 6.831419996527676
+      },
+      "nextControl": {
+        "x": 2.557029978920587,
+        "y": 6.7486333170862025
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.55,
+        "y": 5.54
+      },
+      "prevControl": {
+        "x": 1.950656053564359,
+        "y": 6.203195829815082
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "subwooferFront"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.65,
+      "rotationDegrees": 19.593599503547576,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.2,
+      "rotationDegrees": 55.87,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.1,
+      "rotationDegrees": 55.87,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Launch",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.2,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 0.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "Intake",
+      "waypointRelativePos": 0.35,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Subwoofer",
+      "waypointRelativePos": 0.1,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "fieldLaunch"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Start Pos 1",
+  "previewStartingState": {
+    "rotation": 60.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

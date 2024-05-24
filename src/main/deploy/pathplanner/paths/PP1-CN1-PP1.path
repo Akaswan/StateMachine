@@ -1,0 +1,92 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.801920793030774,
+        "y": 6.471292221863723
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.624699375524877,
+        "y": 6.748633317086454
+      },
+      "isLocked": false,
+      "linkedName": "PoopPoint1"
+    },
+    {
+      "anchor": {
+        "x": 8.072917684296907,
+        "y": 7.617279849944316
+      },
+      "prevControl": {
+        "x": 8.090018691463191,
+        "y": 7.664264480983611
+      },
+      "nextControl": {
+        "x": 8.055816677130624,
+        "y": 7.57029521890502
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.801920793030774,
+        "y": 6.471292221863723
+      },
+      "prevControl": {
+        "x": 6.615454672350786,
+        "y": 6.7393886139123635
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "PoopPoint1"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.05,
+      "rotationDegrees": 20.98,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Intake Then Prepare",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "intake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 6.1,
+    "maxAcceleration": 4.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -14.930000000000007,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Poop Pos 1",
+  "previewStartingState": {
+    "rotation": -14.930000000000007,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}
