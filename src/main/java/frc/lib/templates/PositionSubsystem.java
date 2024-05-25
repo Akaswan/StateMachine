@@ -5,14 +5,13 @@
 package frc.lib.templates;
 
 import com.revrobotics.CANSparkBase;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 import com.revrobotics.SparkPIDController.ArbFFUnits;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
@@ -46,7 +45,7 @@ public abstract class PositionSubsystem extends SubsystemBase {
   protected PositionSubsystemState m_desiredState = null;
 
   protected boolean m_hasBeenZeroed = false;
-  protected boolean m_isZeroed = true; //TODO fix this when you have zeroing working
+  protected boolean m_isZeroed = true; // TODO fix this when you have zeroing working
 
   protected double m_profileStartTime = -1;
 
@@ -59,13 +58,14 @@ public abstract class PositionSubsystem extends SubsystemBase {
     m_currentState = m_constants.kInitialState;
     m_desiredState = m_constants.kInitialState;
 
-
     if (m_constants.kLeaderConstants.kRevMotorType == RevMotorType.CAN_SPARK_MAX) {
       m_leader =
-        new CANSparkMax(m_constants.kLeaderConstants.kID, m_constants.kLeaderConstants.kMotorType);
+          new CANSparkMax(
+              m_constants.kLeaderConstants.kID, m_constants.kLeaderConstants.kMotorType);
     } else {
       m_leader =
-        new CANSparkFlex(m_constants.kLeaderConstants.kID, m_constants.kLeaderConstants.kMotorType);
+          new CANSparkFlex(
+              m_constants.kLeaderConstants.kID, m_constants.kLeaderConstants.kMotorType);
     }
 
     m_leader.setIdleMode(m_constants.kLeaderConstants.kIdleMode);
@@ -93,7 +93,6 @@ public abstract class PositionSubsystem extends SubsystemBase {
       m_followers = new CANSparkBase[0];
     }
 
-      
     m_leader.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
     m_leader.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
     m_leader.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65534);
@@ -103,21 +102,23 @@ public abstract class PositionSubsystem extends SubsystemBase {
 
     try {
       Thread.sleep(200);
-    } catch (Exception e) {}
+    } catch (Exception e) {
+    }
     m_leader.burnFlash();
-
 
     for (int i = 0; i < m_constants.kFollowerConstants.length; i++) {
       if (m_constants.kFollowerConstants[0].kRevMotorType == RevMotorType.CAN_SPARK_MAX) {
         m_followers[i] =
-          new CANSparkMax(
-              m_constants.kFollowerConstants[i].kID, m_constants.kFollowerConstants[i].kMotorType);
+            new CANSparkMax(
+                m_constants.kFollowerConstants[i].kID,
+                m_constants.kFollowerConstants[i].kMotorType);
       } else {
         m_followers[i] =
-          new CANSparkFlex(
-              m_constants.kFollowerConstants[i].kID, m_constants.kFollowerConstants[i].kMotorType);
+            new CANSparkFlex(
+                m_constants.kFollowerConstants[i].kID,
+                m_constants.kFollowerConstants[i].kMotorType);
       }
-      
+
       m_followers[i].setIdleMode(m_constants.kFollowerConstants[i].kIdleMode);
       m_followers[i].setSmartCurrentLimit(m_constants.kFollowerConstants[i].kCurrentLimit);
       m_followers[i].follow(m_leader, m_constants.kFollowerConstants[i].kInverted);
@@ -132,7 +133,8 @@ public abstract class PositionSubsystem extends SubsystemBase {
 
       try {
         Thread.sleep(200);
-      } catch (Exception e) {}
+      } catch (Exception e) {
+      }
       m_followers[i].burnFlash();
     }
 
@@ -147,7 +149,9 @@ public abstract class PositionSubsystem extends SubsystemBase {
             new TrapezoidProfile.Constraints(
                 m_constants.kMaxVelocity * .01, m_constants.kMaxAcceleration * .01));
 
-    m_setpoint = new TrapezoidProfile.State(m_constants.kInitialState.getPosition(), m_constants.kInitialState.getVelocity());
+    m_setpoint =
+        new TrapezoidProfile.State(
+            m_constants.kInitialState.getPosition(), m_constants.kInitialState.getVelocity());
 
     m_pidController.setReference(
         m_currentState.getPosition(),
@@ -155,7 +159,7 @@ public abstract class PositionSubsystem extends SubsystemBase {
         m_constants.kDefaultSlot,
         m_arbFeedforward,
         ArbFFUnits.kVoltage);
-            
+
     setName(m_constants.kSubsystemName);
   }
 
@@ -199,10 +203,10 @@ public abstract class PositionSubsystem extends SubsystemBase {
 
     switch (m_constants.kManualControlMode) {
       case BUMPERS:
-         m_throttle =
-          RobotContainer.m_operatorController.getHID().getLeftBumper()
-              ? -1
-              : (RobotContainer.m_operatorController.getHID().getRightBumper() ? 1 : 0);
+        m_throttle =
+            RobotContainer.m_operatorController.getHID().getLeftBumper()
+                ? -1
+                : (RobotContainer.m_operatorController.getHID().getRightBumper() ? 1 : 0);
         break;
       case LEFT_X:
         m_throttle = RobotContainer.m_operatorController.getLeftX();
@@ -217,9 +221,9 @@ public abstract class PositionSubsystem extends SubsystemBase {
         m_throttle = -RobotContainer.m_operatorController.getRightY();
         break;
       case TRIGGERS:
-        m_throttle = 
-          RobotContainer.m_operatorController.getRightTriggerAxis()
-              - RobotContainer.m_operatorController.getLeftTriggerAxis();
+        m_throttle =
+            RobotContainer.m_operatorController.getRightTriggerAxis()
+                - RobotContainer.m_operatorController.getLeftTriggerAxis();
         break;
     }
 
@@ -234,7 +238,8 @@ public abstract class PositionSubsystem extends SubsystemBase {
 
       m_throttle *= m_constants.kManualMultiplier;
 
-      double intendedPosition = MathUtil.clamp(
+      double intendedPosition =
+          MathUtil.clamp(
               m_constants.kManualState.getPosition() + m_throttle,
               m_constants.kMinPosition,
               m_constants.kMaxPosition);
@@ -285,8 +290,12 @@ public abstract class PositionSubsystem extends SubsystemBase {
   }
 
   public boolean atSetpoint() {
-    if (m_profileStartTime != -1 && Math.abs(m_desiredState.getPosition() - m_setpoint.position) <= m_constants.kSetpointTolerance || m_currentState == m_constants.kManualState)  {
-      return Math.abs(m_desiredState.getPosition() - getPosition()) <= m_constants.kSetpointTolerance;
+    if (m_profileStartTime != -1
+            && Math.abs(m_desiredState.getPosition() - m_setpoint.position)
+                <= m_constants.kSetpointTolerance
+        || m_currentState == m_constants.kManualState) {
+      return Math.abs(m_desiredState.getPosition() - getPosition())
+          <= m_constants.kSetpointTolerance;
     } else if (m_profileStartTime == -1) {
       return true;
     }
@@ -294,11 +303,15 @@ public abstract class PositionSubsystem extends SubsystemBase {
   }
 
   public double getPosition() {
-    return Constants.kCurrentMode == Mode.REAL ? m_encoder.getPosition() : m_currentState.getPosition();
+    return Constants.kCurrentMode == Mode.REAL
+        ? m_encoder.getPosition()
+        : m_currentState.getPosition();
   }
 
   public double getVelocity() {
-    return Constants.kCurrentMode == Mode.REAL ? m_encoder.getVelocity() : m_currentState.getVelocity();
+    return Constants.kCurrentMode == Mode.REAL
+        ? m_encoder.getVelocity()
+        : m_currentState.getVelocity();
   }
 
   public PositionSubsystemType getSubsystemType() {
@@ -315,11 +328,14 @@ public abstract class PositionSubsystem extends SubsystemBase {
     }
 
     if (Constants.kInfoMode) {
-      SmartDashboard.putString(m_constants.kSubsystemName + "/Current State", m_currentState.getName());
-      SmartDashboard.putString(m_constants.kSubsystemName + "/Desired State", m_desiredState.getName());
+      SmartDashboard.putString(
+          m_constants.kSubsystemName + "/Current State", m_currentState.getName());
+      SmartDashboard.putString(
+          m_constants.kSubsystemName + "/Desired State", m_desiredState.getName());
 
       SmartDashboard.putNumber(m_constants.kSubsystemName + "/Current Position", getPosition());
-      SmartDashboard.putNumber(m_constants.kSubsystemName + "/Desired Position", m_desiredState.getPosition());
+      SmartDashboard.putNumber(
+          m_constants.kSubsystemName + "/Desired Position", m_desiredState.getPosition());
     }
     subsystemPeriodic();
   }
@@ -349,9 +365,7 @@ public abstract class PositionSubsystem extends SubsystemBase {
 
 // EXAMPLE POSITION SUBSYSTEM IMPLEMENTATION
 
-
 // public class ExamplePositionSubsystem extends PositionSubsystem {
-
 
 //     private static ExamplePositionSubsystem m_instance = null;
 
@@ -361,7 +375,8 @@ public abstract class PositionSubsystem extends SubsystemBase {
 
 //     public static ExamplePositionSubsystem getInstance() {
 //         if (m_instance == null) {
-//             m_instance = new ExamplePositionSubsystem(ExampleConstants.kExamplePositionSubsystemConstants);
+//             m_instance = new
+// ExamplePositionSubsystem(ExampleConstants.kExamplePositionSubsystemConstants);
 //         }
 
 //         return m_instance;
@@ -379,11 +394,11 @@ public abstract class PositionSubsystem extends SubsystemBase {
 //         UP(45, 0, "Up"),
 //         TRANSITION(0, 0, "Transition"),
 //         MANUAL(0, 0, "Manual");
-    
+
 //         private double position;
 //         private double velocity;
 //         private String name;
-    
+
 //         private ExamplePositionSubsystemState(double position, double velocity, String name) {
 //           this.position = position;
 //           this.velocity = velocity;
@@ -415,5 +430,5 @@ public abstract class PositionSubsystem extends SubsystemBase {
 //             this.position = position;
 //         }
 //     }
-    
+
 // }

@@ -11,15 +11,17 @@ import frc.lib.templates.VelocitySubsystem.VelocitySubsystemState;
 public class SetVelocitySubsystemState extends Command {
   /** Creates a new SetMechState. */
   private VelocitySubsystem m_subsystem;
+
   private VelocitySubsystemState m_subsystemState;
 
-  public SetVelocitySubsystemState(VelocitySubsystem subsystem, VelocitySubsystemState subsystemState) {
+  public SetVelocitySubsystemState(
+      VelocitySubsystem subsystem, VelocitySubsystemState subsystemState) {
     m_subsystem = subsystem;
     m_subsystemState = subsystemState;
 
     addRequirements(m_subsystem);
   }
-  
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -28,8 +30,7 @@ public class SetVelocitySubsystemState extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override

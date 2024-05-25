@@ -11,15 +11,16 @@ import frc.lib.templates.PositionSubsystem.PositionSubsystemState;
 public class SetPositionSubsystemState extends Command {
   /** Creates a new SetMechState. */
   private PositionSubsystem m_subsystem;
+
   private PositionSubsystemState m_subsystemState;
 
-  public SetPositionSubsystemState(PositionSubsystem subsystem, PositionSubsystemState subsystemState) {
+  public SetPositionSubsystemState(
+      PositionSubsystem subsystem, PositionSubsystemState subsystemState) {
     m_subsystem = subsystem;
     m_subsystemState = subsystemState;
 
     addRequirements(m_subsystem);
   }
-
 
   // Called when the command is initially scheduled.
   @Override

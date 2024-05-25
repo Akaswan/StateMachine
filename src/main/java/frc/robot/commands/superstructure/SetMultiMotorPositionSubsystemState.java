@@ -11,9 +11,11 @@ import frc.lib.templates.MultiMotorPositionSubsystem.MultiMotorPositionSubsystem
 public class SetMultiMotorPositionSubsystemState extends Command {
   /** Creates a new SetMechState. */
   private MultiMotorPositionSubsystem m_subsystem;
+
   private MultiMotorPositionSubsystemState m_subsystemState;
 
-  public SetMultiMotorPositionSubsystemState(MultiMotorPositionSubsystem subsystem, MultiMotorPositionSubsystemState subsystemState) {
+  public SetMultiMotorPositionSubsystemState(
+      MultiMotorPositionSubsystem subsystem, MultiMotorPositionSubsystemState subsystemState) {
     m_subsystem = subsystem;
     m_subsystemState = subsystemState;
 
@@ -28,8 +30,7 @@ public class SetMultiMotorPositionSubsystemState extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override

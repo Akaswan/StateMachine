@@ -14,7 +14,8 @@
 // import java.util.Map;
 
 // /**
-//  * Class for a tunable number. Gets value from dashboard in tuning mode, returns default if not or
+//  * Class for a tunable number. Gets value from dashboard in tuning mode, returns default if not
+// or
 //  * value not in dashboard.
 //  */
 // public class LoggedShuffleboardTunableNumber {

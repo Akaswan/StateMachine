@@ -35,7 +35,7 @@ public abstract class SuperstructureSubsystem extends SubsystemBase {
   }
 
   public abstract SequentialCommandGroup setSuperstructureState(SuperstructureState desiredState);
-  
+
   public abstract SuperstructureState getTransitionState();
 
   public abstract void superstructurePeriodic();

@@ -22,7 +22,6 @@ public final class CtreUtils {
     return sensorConfig;
   }
 
-
   /**
    *
    *

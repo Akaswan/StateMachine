@@ -5,14 +5,13 @@
 package frc.lib.templates;
 
 import com.revrobotics.CANSparkBase;
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
-import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.SparkPIDController.ArbFFUnits;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.templates.SubsystemConstants.RevMotorType;
@@ -55,10 +54,12 @@ public abstract class VelocitySubsystem extends SubsystemBase {
     for (int i = 0; i < m_constants.kMotorConstants.length; i++) {
       if (m_constants.kMotorConstants[i].kRevMotorType == RevMotorType.CAN_SPARK_MAX) {
         m_motors[i] =
-          new CANSparkMax(m_constants.kMotorConstants[i].kID, m_constants.kMotorConstants[i].kMotorType);
+            new CANSparkMax(
+                m_constants.kMotorConstants[i].kID, m_constants.kMotorConstants[i].kMotorType);
       } else {
         m_motors[i] =
-          new CANSparkFlex(m_constants.kMotorConstants[i].kID, m_constants.kMotorConstants[i].kMotorType);
+            new CANSparkFlex(
+                m_constants.kMotorConstants[i].kID, m_constants.kMotorConstants[i].kMotorType);
       }
       m_motors[i].setIdleMode(m_constants.kMotorConstants[i].kIdleMode);
       m_motors[i].setSmartCurrentLimit(m_constants.kMotorConstants[i].kCurrentLimit);
@@ -84,9 +85,9 @@ public abstract class VelocitySubsystem extends SubsystemBase {
 
       try {
         Thread.sleep(200);
-      } catch (Exception e) {}
+      } catch (Exception e) {
+      }
       m_motors[i].burnFlash();
-      
     }
 
     setName(m_constants.kSubsystemName);
@@ -107,7 +108,12 @@ public abstract class VelocitySubsystem extends SubsystemBase {
   public void setDesiredState(VelocitySubsystemState desiredState) {
     m_desiredState = desiredState;
     for (int i = 0; i < m_pidControllers.length; i++) {
-      m_pidControllers[i].setReference(m_desiredState.getVelocity()[i], ControlType.kVelocity, m_constants.kDefaultSlot, m_arbFeedforward[i], ArbFFUnits.kVoltage);
+      m_pidControllers[i].setReference(
+          m_desiredState.getVelocity()[i],
+          ControlType.kVelocity,
+          m_constants.kDefaultSlot,
+          m_arbFeedforward[i],
+          ArbFFUnits.kVoltage);
       if (desiredState.getVelocity()[i] == 0) {
         isStopping = true;
         m_motors[i].stopMotor();
@@ -121,7 +127,8 @@ public abstract class VelocitySubsystem extends SubsystemBase {
     boolean output = true;
 
     for (int i = 0; i < getVelocity().length; i++) {
-      if (Math.abs(m_desiredState.getVelocity()[i] - getVelocity()[i]) >= m_constants.kSetpointTolerance) {
+      if (Math.abs(m_desiredState.getVelocity()[i] - getVelocity()[i])
+          >= m_constants.kSetpointTolerance) {
         output = false;
         break;
       }
@@ -152,18 +159,22 @@ public abstract class VelocitySubsystem extends SubsystemBase {
   public void periodic() {
 
     if (atSetpoint()) {
-        m_currentState = m_desiredState;
-    } else{
-        m_currentState = m_constants.kTransitionState;
-        m_currentState.setVelocity(getVelocity());
+      m_currentState = m_desiredState;
+    } else {
+      m_currentState = m_constants.kTransitionState;
+      m_currentState.setVelocity(getVelocity());
     }
 
     if (Constants.kInfoMode) {
-      SmartDashboard.putNumber(m_constants.kSubsystemName + "/Desired Velocity", m_desiredState.getVelocity()[0]);
+      SmartDashboard.putNumber(
+          m_constants.kSubsystemName + "/Desired Velocity", m_desiredState.getVelocity()[0]);
       SmartDashboard.putNumber(m_constants.kSubsystemName + "/Current Velocity", getVelocity()[0]);
-      SmartDashboard.putNumber(m_constants.kSubsystemName + "/Current Velocity 2", getVelocity()[1]);
-      SmartDashboard.putString(m_constants.kSubsystemName + "/Current State", m_currentState.getName());
-      SmartDashboard.putString(m_constants.kSubsystemName + "/Desired State", m_desiredState.getName());
+      SmartDashboard.putNumber(
+          m_constants.kSubsystemName + "/Current Velocity 2", getVelocity()[1]);
+      SmartDashboard.putString(
+          m_constants.kSubsystemName + "/Current State", m_currentState.getName());
+      SmartDashboard.putString(
+          m_constants.kSubsystemName + "/Desired State", m_desiredState.getName());
     }
     subsystemPeriodic();
   }
@@ -185,7 +196,6 @@ public abstract class VelocitySubsystem extends SubsystemBase {
   }
 }
 
-
 // EXAMPLE IMPLEMENTATION
 
 // public class ExampleVelocitySubsystem extends VelocitySubsystem {
@@ -198,7 +208,8 @@ public abstract class VelocitySubsystem extends SubsystemBase {
 
 //     public static ExampleVelocitySubsystem getInstance() {
 //         if (m_instance == null) {
-//             m_instance = new ExampleVelocitySubsystem(LauncherConstants.kLauncherFlywheelConstants);
+//             m_instance = new
+// ExampleVelocitySubsystem(LauncherConstants.kLauncherFlywheelConstants);
 //         }
 
 //         return m_instance;
@@ -218,10 +229,10 @@ public abstract class VelocitySubsystem extends SubsystemBase {
 //         FIELD_BASED_VELOCITY(new double[] {0, 0}, "Field Based Velocity"),
 //         RUNNING(new double[] {-5500, -5500}, "Running"),
 //         MANUAL(new double[] {0, 0}, "Manual");
-    
+
 //         private double[] velocity;
 //         private String name;
-    
+
 //         private ExampleVelocitySubsystemState(double[] velocity, String name) {
 //           this.velocity = velocity;
 //           this.name = name;
@@ -242,5 +253,5 @@ public abstract class VelocitySubsystem extends SubsystemBase {
 //             this.velocity = velocity;
 //         }
 //     }
-    
+
 // }

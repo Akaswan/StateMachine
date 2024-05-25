@@ -11,7 +11,6 @@ import frc.robot.Constants.LEDConstants;
 
 public class LED extends SubsystemBase {
   /** Creates a new LED. */
-
   private static LED m_instance = null;
 
   public AddressableLED m_led;
@@ -47,7 +46,7 @@ public class LED extends SubsystemBase {
     } else {
       for (int i = 0; i < m_ledBuffer.getLength(); i++) {
         m_ledBuffer.setRGB(i, 0, 0, 0);
-      } 
+      }
     }
 
     m_led.setData(m_ledBuffer);

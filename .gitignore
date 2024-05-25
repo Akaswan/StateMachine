@@ -135,6 +135,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Advantagekit #
+src/main/java/frc/robot/BuildConstants.java
+
 ### Gradle ###
 .gradle
 /build/

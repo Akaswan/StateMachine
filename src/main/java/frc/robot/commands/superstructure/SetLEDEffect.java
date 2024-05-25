@@ -22,7 +22,7 @@ public class SetLEDEffect extends Command {
 
   private LED m_led = LED.getInstance();
 
-    /**
+  /**
    *
    *
    * <h3>SetLEDEffect</h3>
@@ -37,18 +37,18 @@ public class SetLEDEffect extends Command {
     addRequirements(RobotContainer.m_LED);
   }
 
-    /**
+  /**
    *
    *
    * <h3>SetLEDEffect</h3>
    *
    * Sets the effect of the LED class then ends instantly
-   * 
-   * When using this in a command composition create a <code>new ScheduleCommand()</code> 
-   * with this command as its parameter
    *
-   * @param effect       The LEDEffect to be applied immediately.
-   * @param runTime      The duration (in seconds) for which the effect should run.
+   * <p>When using this in a command composition create a <code>new ScheduleCommand()</code> with
+   * this command as its parameter
+   *
+   * @param effect The LEDEffect to be applied immediately.
+   * @param runTime The duration (in seconds) for which the effect should run.
    * @param queuedEffect The LEDEffect to be applied after the current effect finishes.
    */
   public SetLEDEffect(LEDEffect effect, double runTime, LEDEffect queuedEffect) {

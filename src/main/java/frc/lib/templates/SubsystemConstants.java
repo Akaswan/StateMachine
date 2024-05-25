@@ -2,7 +2,6 @@ package frc.lib.templates;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
 import frc.lib.templates.MultiMotorPositionSubsystem.MultiMotorPositionSubsystemState;
 import frc.lib.templates.MultiMotorPositionSubsystem.MultiMotorPositionSubsystemType;
 import frc.lib.templates.PositionSubsystem.PositionSubsystemState;
@@ -194,7 +193,8 @@ public class SubsystemConstants {
 //   kExampleFollowerConstants[1].kInverted = false;
 // }
 
-// public static VoltageSubsystemConstants kExampleVoltageSubsystemConstants = new VoltageSubsystemConstants();
+// public static VoltageSubsystemConstants kExampleVoltageSubsystemConstants = new
+// VoltageSubsystemConstants();
 
 // static {
 //   // Name of the subsystem
@@ -203,7 +203,8 @@ public class SubsystemConstants {
 //   // Name of the superstructure encasing the subsystem
 //   kExampleVoltageSubsystemConstants.kSuperstructureName = "Intake";
 
-//   // Type of voltage subsystem, add this, for example INTAKE_WHEELS, to the enum in VoltageSubsystem
+//   // Type of voltage subsystem, add this, for example INTAKE_WHEELS, to the enum in
+// VoltageSubsystem
 //   kExampleVoltageSubsystemConstants.kSubsystemType = null;
 
 //   // Leader spark constants
@@ -212,7 +213,8 @@ public class SubsystemConstants {
 //   // Array of Spark constants to declare motors that follow the leader
 //   kExampleVoltageSubsystemConstants.kFollowerConstants = kExampleFollowerConstants;
 
-//   // Initial state of the subsystem, pulled from an enum that has to be created in the subclass of VoltageSubsystem
+//   // Initial state of the subsystem, pulled from an enum that has to be created in the subclass
+// of VoltageSubsystem
 //   kExampleVoltageSubsystemConstants.kInitialState = null;
 // }
 
@@ -248,7 +250,8 @@ public class SubsystemConstants {
 //   kExampleMotorConstants[1].kKff = 0.0001675;
 // }
 
-// public static VelocitySubsystemConstants kExamplePositionSubsystemConstants = new VelocitySubsystemConstants();
+// public static VelocitySubsystemConstants kExamplePositionSubsystemConstants = new
+// VelocitySubsystemConstants();
 
 // static {
 
@@ -258,7 +261,8 @@ public class SubsystemConstants {
 // // Name of the superstructure containing this subsystem
 // kExamplePositionSubsystemConstants.kSuperstructureName = "Launcher";
 
-// // Enum containing the types are in the velocity subsystem template, you need to add this subsystem to the list
+// // Enum containing the types are in the velocity subsystem template, you need to add this
+// subsystem to the list
 // kExamplePositionSubsystemConstants.kSubsystemType = null;
 
 // // Array of motor constants
@@ -277,10 +281,10 @@ public class SubsystemConstants {
 // kExamplePositionSubsystemConstants.kVelocityConversionFactor = 1.0;
 
 // // Tolerance for atSetpoint()
-// kExamplePositionSubsystemConstants.kSetpointTolerance = 0.0; 
+// kExamplePositionSubsystemConstants.kSetpointTolerance = 0.0;
 
 // // PID Slot, make more if more than one set of pid constants are used
-// kExamplePositionSubsystemConstants.kDefaultSlot = 0; 
+// kExamplePositionSubsystemConstants.kDefaultSlot = 0;
 // }
 
 // POSITION SUBSYSTEM CONSTANTS TEMPLATE
@@ -328,14 +332,16 @@ public class SubsystemConstants {
 //   kExampleFollowerConstants[1].kKd = 0.0;
 // }
 
-// public static PositionSubsystemConstants kExamplePositionSubsystemConstants = new PositionSubsystemConstants();
+// public static PositionSubsystemConstants kExamplePositionSubsystemConstants = new
+// PositionSubsystemConstants();
 
 // static {
 //   // Name of the subsystem, for example "Launcher Flywheels"
-//   kExamplePositionSubsystemConstants.kSubsystemName = "Example Multi Motor Position Subsystem"; 
+//   kExamplePositionSubsystemConstants.kSubsystemName = "Example Multi Motor Position Subsystem";
 
 //   // Name of the subsystem, for example "Launcher"
-//   kExamplePositionSubsystemConstants.kSuperstructureName = "Example Multi Motor Position Superstructure";
+//   kExamplePositionSubsystemConstants.kSuperstructureName = "Example Multi Motor Position
+// Superstructure";
 
 //   // An enum which is in the template subsystem
 //   kExamplePositionSubsystemConstants.kSubsystemType = null;
@@ -361,16 +367,16 @@ public class SubsystemConstants {
 //   // Conversion factor for the motor output units
 //   // To find degrees: 360/gear ratio ex 360/100 for 100:1
 //   // For example for ratio 100:1 do 100
-//   kExamplePositionSubsystemConstants.kPositionConversionFactor = 1.0; 
+//   kExamplePositionSubsystemConstants.kPositionConversionFactor = 1.0;
 
 //   // Tolerance for atSetpoint()
-//   kExamplePositionSubsystemConstants.kSetpointTolerance = 0.0; 
+//   kExamplePositionSubsystemConstants.kSetpointTolerance = 0.0;
 
 //   // PID Slot, make more if more than one set of pid constants are used
-//   kExamplePositionSubsystemConstants.kDefaultSlot = 0; 
+//   kExamplePositionSubsystemConstants.kDefaultSlot = 0;
 
 //   // Max velocity and acceleration for trapezoidal motion profile
-//   kExamplePositionSubsystemConstants.kMaxVelocity = 0.0; 
+//   kExamplePositionSubsystemConstants.kMaxVelocity = 0.0;
 //   kExamplePositionSubsystemConstants.kMaxAcceleration = 0.0;
 
 //   // Max/Min positions the subsystem should be able to move
@@ -417,14 +423,17 @@ public class SubsystemConstants {
 //   kExampleMotorConstants[1].kKd = 0.0;
 // }
 
-// public static MultiMotorPositionSubsystemConstants kExampleMultiMotorPositionSubsystemConstants = new MultiMotorPositionSubsystemConstants();
+// public static MultiMotorPositionSubsystemConstants kExampleMultiMotorPositionSubsystemConstants =
+// new MultiMotorPositionSubsystemConstants();
 
 // static {
 //   // Name of the subsystem, for example "Launcher Flywheels"
-//   kExampleMultiMotorPositionSubsystemConstants.kSubsystemName = "Example Multi Motor Position Subsystem"; 
-  
+//   kExampleMultiMotorPositionSubsystemConstants.kSubsystemName = "Example Multi Motor Position
+// Subsystem";
+
 //   // Name of the subsystem, for example "Launcher"
-//   kExampleMultiMotorPositionSubsystemConstants.kSuperstructureName = "Example Multi Motor Position Superstructure";
+//   kExampleMultiMotorPositionSubsystemConstants.kSuperstructureName = "Example Multi Motor
+// Position Superstructure";
 
 //   // An enum which is in the template subsystem
 //   kExampleMultiMotorPositionSubsystemConstants.kSubsystemType = null;
@@ -446,16 +455,16 @@ public class SubsystemConstants {
 //   // Conversion factor for the motor output units
 //   // To find degrees: 360/gear ratio ex 360/100 for 100:1
 //   // For example for ratio 100:1 do 100
-//   kExampleMultiMotorPositionSubsystemConstants.kPositionConversionFactor = 1.0; 
+//   kExampleMultiMotorPositionSubsystemConstants.kPositionConversionFactor = 1.0;
 
 //   // Tolerance for atSetpoint()
-//   kExampleMultiMotorPositionSubsystemConstants.kSetpointTolerance = 0.0; 
+//   kExampleMultiMotorPositionSubsystemConstants.kSetpointTolerance = 0.0;
 
 //   // PID Slot, make more if more than one set of pid constants are used
-//   kExampleMultiMotorPositionSubsystemConstants.kDefaultSlot = 0; 
+//   kExampleMultiMotorPositionSubsystemConstants.kDefaultSlot = 0;
 
 //   // Max velocity and acceleration for trapezoidal motion profile
-//   kExampleMultiMotorPositionSubsystemConstants.kMaxVelocity = 0.0; 
+//   kExampleMultiMotorPositionSubsystemConstants.kMaxVelocity = 0.0;
 //   kExampleMultiMotorPositionSubsystemConstants.kMaxAcceleration = 0.0;
 
 //   // Max/Min positions the subsystem should be able to move

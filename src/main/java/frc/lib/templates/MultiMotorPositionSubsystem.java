@@ -5,14 +5,13 @@
 package frc.lib.templates;
 
 import com.revrobotics.CANSparkBase;
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
-import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.SparkPIDController.ArbFFUnits;
-
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -60,7 +59,7 @@ public abstract class MultiMotorPositionSubsystem extends SubsystemBase {
     } else {
       m_motors = new CANSparkFlex[m_constants.kMotorConstants.length];
     }
-    
+
     m_pidControllers = new SparkPIDController[m_motors.length];
     m_encoders = new RelativeEncoder[m_motors.length];
     m_profileStartPosition = new double[m_motors.length];
@@ -69,10 +68,12 @@ public abstract class MultiMotorPositionSubsystem extends SubsystemBase {
     for (int i = 0; i < m_motors.length; i++) {
       if (m_constants.kMotorConstants[i].kRevMotorType == RevMotorType.CAN_SPARK_MAX) {
         m_motors[i] =
-          new CANSparkMax(m_constants.kMotorConstants[i].kID, m_constants.kMotorConstants[i].kMotorType);
+            new CANSparkMax(
+                m_constants.kMotorConstants[i].kID, m_constants.kMotorConstants[i].kMotorType);
       } else {
         m_motors[i] =
-          new CANSparkFlex(m_constants.kMotorConstants[i].kID, m_constants.kMotorConstants[i].kMotorType);
+            new CANSparkFlex(
+                m_constants.kMotorConstants[i].kID, m_constants.kMotorConstants[i].kMotorType);
       }
       m_motors[i].setIdleMode(m_constants.kMotorConstants[i].kIdleMode);
       m_motors[i].setSmartCurrentLimit(m_constants.kMotorConstants[i].kCurrentLimit);
@@ -97,7 +98,8 @@ public abstract class MultiMotorPositionSubsystem extends SubsystemBase {
 
       try {
         Thread.sleep(200);
-      } catch (Exception e) {}
+      } catch (Exception e) {
+      }
       m_motors[i].burnFlash();
     }
 
@@ -115,7 +117,8 @@ public abstract class MultiMotorPositionSubsystem extends SubsystemBase {
 
   public void runToSetpoint() {
 
-    if (m_currentState != m_constants.kTransitionState) m_currentState = m_constants.kTransitionState;
+    if (m_currentState != m_constants.kTransitionState)
+      m_currentState = m_constants.kTransitionState;
 
     for (int i = 0; i < m_motors.length; i++) {
       if (m_hasBeenZeroed) {
@@ -139,8 +142,6 @@ public abstract class MultiMotorPositionSubsystem extends SubsystemBase {
           m_arbFeedforward,
           ArbFFUnits.kVoltage);
 
-
-
       m_constants.kTransitionState.setPosition(m_setpoint.position, i);
       m_constants.kTransitionState.setVelocity(m_setpoint.velocity, i);
 
@@ -157,46 +158,46 @@ public abstract class MultiMotorPositionSubsystem extends SubsystemBase {
   // Example implementation for one motor
   // Really on a per mech basis, you have to override this if you want to use it
   // {
-    // double m_throttle = 0;
+  // double m_throttle = 0;
 
-    // switch (m_constants.kManualControlMode) {
-    //   case BUMPERS:
-    //      m_throttle =
-    //       RobotContainer.m_operatorController.getHID().getLeftBumper()
-    //           ? 1
-    //           : 0 + (RobotContainer.m_operatorController.getHID().getRightBumper() ? -1 : 0);
-    //   case LEFT_X:
-    //     m_throttle = -RobotContainer.m_driverController.getLeftX();
-    //   case LEFT_Y:
-    //     m_throttle = -RobotContainer.m_driverController.getLeftY();
-    //   case RIGHT_X:
-    //     m_throttle = -RobotContainer.m_driverController.getRightX();
-    //   case RIGHT_Y:
-    //     m_throttle = -RobotContainer.m_driverController.getRightY();
-    //   case TRIGGERS:
-    //     m_throttle =
-    //       RobotContainer.m_driverController.getRightTriggerAxis()
-    //           - RobotContainer.m_driverController.getLeftTriggerAxis();
-    // }
+  // switch (m_constants.kManualControlMode) {
+  //   case BUMPERS:
+  //      m_throttle =
+  //       RobotContainer.m_operatorController.getHID().getLeftBumper()
+  //           ? 1
+  //           : 0 + (RobotContainer.m_operatorController.getHID().getRightBumper() ? -1 : 0);
+  //   case LEFT_X:
+  //     m_throttle = -RobotContainer.m_driverController.getLeftX();
+  //   case LEFT_Y:
+  //     m_throttle = -RobotContainer.m_driverController.getLeftY();
+  //   case RIGHT_X:
+  //     m_throttle = -RobotContainer.m_driverController.getRightX();
+  //   case RIGHT_Y:
+  //     m_throttle = -RobotContainer.m_driverController.getRightY();
+  //   case TRIGGERS:
+  //     m_throttle =
+  //       RobotContainer.m_driverController.getRightTriggerAxis()
+  //           - RobotContainer.m_driverController.getLeftTriggerAxis();
+  // }
 
-    // m_throttle = MathUtil.applyDeadband(m_throttle, m_constants.kManualDeadBand);
+  // m_throttle = MathUtil.applyDeadband(m_throttle, m_constants.kManualDeadBand);
 
-    // if (m_currentState != m_constants.kManualState)
-    //   m_constants.kManualState.setPosition(getPosition());
+  // if (m_currentState != m_constants.kManualState)
+  //   m_constants.kManualState.setPosition(getPosition());
 
-    // if (Math.abs(m_throttle) > 0 && m_profileStartTime == -1) {
-    //   m_desiredState = m_constants.kManualState;
-    //   m_currentState = m_constants.kManualState;
+  // if (Math.abs(m_throttle) > 0 && m_profileStartTime == -1) {
+  //   m_desiredState = m_constants.kManualState;
+  //   m_currentState = m_constants.kManualState;
 
-    //   m_throttle *= m_constants.kManualMultiplier;
+  //   m_throttle *= m_constants.kManualMultiplier;
 
-    //   m_constants.kManualState.setPosition(m_constants.kManualState.getPosition() + m_throttle);
-    //   m_constants.kManualState.setPosition(
-    //       MathUtil.clamp(
-    //           m_constants.kManualState.getPosition(),
-    //           m_constants.kMinPosition,
-    //           m_constants.kMaxPosition));
-    // }
+  //   m_constants.kManualState.setPosition(m_constants.kManualState.getPosition() + m_throttle);
+  //   m_constants.kManualState.setPosition(
+  //       MathUtil.clamp(
+  //           m_constants.kManualState.getPosition(),
+  //           m_constants.kMinPosition,
+  //           m_constants.kMaxPosition));
+  // }
   // }
 
   public void holdPosition() {
@@ -227,10 +228,10 @@ public abstract class MultiMotorPositionSubsystem extends SubsystemBase {
     for (RelativeEncoder encoder : m_encoders) {
       encoder.setPosition(position);
     }
-    
   }
 
-  public void setDesiredState(MultiMotorPositionSubsystemState desiredState, boolean useMotionProfile) {
+  public void setDesiredState(
+      MultiMotorPositionSubsystemState desiredState, boolean useMotionProfile) {
     if (m_currentState != m_constants.kManualState) {
       for (int i = 0; i < m_motors.length; i++) {
         m_setpoint =
@@ -254,8 +255,13 @@ public abstract class MultiMotorPositionSubsystem extends SubsystemBase {
     boolean output = false;
 
     for (int i = 0; i < m_motors.length; i++) {
-      if (m_profileStartTime != -1 && Math.abs(m_desiredState.getPosition()[i] - m_setpoint.position) <= m_constants.kSetpointTolerance || m_currentState == m_constants.kManualState)  {
-        output = Math.abs(m_desiredState.getPosition()[i] - getPosition()[i]) <= m_constants.kSetpointTolerance;
+      if (m_profileStartTime != -1
+              && Math.abs(m_desiredState.getPosition()[i] - m_setpoint.position)
+                  <= m_constants.kSetpointTolerance
+          || m_currentState == m_constants.kManualState) {
+        output =
+            Math.abs(m_desiredState.getPosition()[i] - getPosition()[i])
+                <= m_constants.kSetpointTolerance;
         break;
       } else if (m_profileStartTime == -1) {
         return true;
@@ -280,7 +286,7 @@ public abstract class MultiMotorPositionSubsystem extends SubsystemBase {
   }
 
   public double[] getVelocity() {
-        if (Constants.kCurrentMode == Mode.REAL) {
+    if (Constants.kCurrentMode == Mode.REAL) {
       double[] output = new double[m_motors.length];
 
       for (int i = 0; i < output.length; i++) {
@@ -307,13 +313,16 @@ public abstract class MultiMotorPositionSubsystem extends SubsystemBase {
     }
 
     if (Constants.kInfoMode) {
-      SmartDashboard.putString(m_constants.kSubsystemName + "/Current State", m_currentState.getName());
-      SmartDashboard.putString(m_constants.kSubsystemName + "/Desired State", m_desiredState.getName());
+      SmartDashboard.putString(
+          m_constants.kSubsystemName + "/Current State", m_currentState.getName());
+      SmartDashboard.putString(
+          m_constants.kSubsystemName + "/Desired State", m_desiredState.getName());
 
       SmartDashboard.putNumber(m_constants.kSubsystemName + "/Current Position", getPosition()[0]);
-      SmartDashboard.putNumber(m_constants.kSubsystemName + "/Desired Position", m_desiredState.getPosition()[0]);
+      SmartDashboard.putNumber(
+          m_constants.kSubsystemName + "/Desired Position", m_desiredState.getPosition()[0]);
     }
-    
+
     subsystemPeriodic();
   }
 
@@ -338,7 +347,6 @@ public abstract class MultiMotorPositionSubsystem extends SubsystemBase {
   }
 }
 
-
 // EXAMPLE SUBSYSTEM IMPLEMENTATION
 
 // public class ExampleMultiMotorPositionSubsystem extends MultiMotorPositionSubsystem {
@@ -351,7 +359,8 @@ public abstract class MultiMotorPositionSubsystem extends SubsystemBase {
 
 //     public static ExampleMultiMotorPositionSubsystem getInstance() {
 //         if (m_instance == null) {
-//             m_instance = new ExampleMultiMotorPositionSubsystem(ExampleConstants.ExampleMultiMotorPositionSubsystemConstants);
+//             m_instance = new
+// ExampleMultiMotorPositionSubsystem(ExampleConstants.ExampleMultiMotorPositionSubsystemConstants);
 //         }
 
 //         return m_instance;
@@ -365,19 +374,19 @@ public abstract class MultiMotorPositionSubsystem extends SubsystemBase {
 
 //     @Override
 //     public void outputTelemetry() {}
-    
 
 //     public enum ExampleMultiMotorPositionState implements MultiMotorPositionSubsystemState {
 //         DOWN(new double[] {0, 0}, new double[] {0, 0}, "Down"),
 //         UP(new double[] {45, 45}, new double[] {0, 0}, "Up"),
 //         TRANSITION(new double[] {0, 0}, new double[] {0, 0}, "Transition"),
 //         MANUAL(new double[] {0, 0}, new double[] {0, 0}, "Manual");
-    
+
 //         private double[] position;
 //         private double[] velocity;
 //         private String name;
-    
-//         private ExampleMultiMotorPositionState(double[] position, double[] velocity, String name) {
+
+//         private ExampleMultiMotorPositionState(double[] position, double[] velocity, String name)
+// {
 //           this.position = position;
 //           this.velocity = velocity;
 //           this.name = name;

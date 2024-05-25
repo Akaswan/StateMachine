@@ -13,7 +13,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.Trajectory.State;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -178,5 +177,4 @@ public class GeometryUtils {
   public static double modifyInputs(double input, double modifier) {
     return input >= 0 ? Math.pow(input, modifier) : -Math.pow(-input, modifier);
   }
-
 }

@@ -9,7 +9,6 @@ import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.templates.SubsystemConstants.RevMotorType;
@@ -35,10 +34,12 @@ public abstract class VoltageSubsystem extends SubsystemBase {
 
     if (m_constants.kLeaderConstants.kRevMotorType == RevMotorType.CAN_SPARK_MAX) {
       m_leader =
-        new CANSparkMax(m_constants.kLeaderConstants.kID, m_constants.kLeaderConstants.kMotorType);
+          new CANSparkMax(
+              m_constants.kLeaderConstants.kID, m_constants.kLeaderConstants.kMotorType);
     } else {
       m_leader =
-        new CANSparkFlex(m_constants.kLeaderConstants.kID, m_constants.kLeaderConstants.kMotorType);
+          new CANSparkFlex(
+              m_constants.kLeaderConstants.kID, m_constants.kLeaderConstants.kMotorType);
     }
     m_leader.setIdleMode(m_constants.kLeaderConstants.kIdleMode);
     m_leader.setSmartCurrentLimit(m_constants.kLeaderConstants.kCurrentLimit);
@@ -64,18 +65,21 @@ public abstract class VoltageSubsystem extends SubsystemBase {
 
     try {
       Thread.sleep(200);
-    } catch (Exception e) {}
+    } catch (Exception e) {
+    }
     m_leader.burnFlash();
 
     for (int i = 0; i < m_constants.kFollowerConstants.length; i++) {
       if (m_constants.kFollowerConstants[0].kRevMotorType == RevMotorType.CAN_SPARK_MAX) {
         m_followers[i] =
-          new CANSparkMax(
-              m_constants.kFollowerConstants[i].kID, m_constants.kFollowerConstants[i].kMotorType);
+            new CANSparkMax(
+                m_constants.kFollowerConstants[i].kID,
+                m_constants.kFollowerConstants[i].kMotorType);
       } else {
         m_followers[i] =
-          new CANSparkFlex(
-              m_constants.kFollowerConstants[i].kID, m_constants.kFollowerConstants[i].kMotorType);
+            new CANSparkFlex(
+                m_constants.kFollowerConstants[i].kID,
+                m_constants.kFollowerConstants[i].kMotorType);
       }
       m_followers[i].setIdleMode(m_constants.kFollowerConstants[i].kIdleMode);
       m_followers[i].setSmartCurrentLimit(m_constants.kFollowerConstants[i].kCurrentLimit);
@@ -91,7 +95,8 @@ public abstract class VoltageSubsystem extends SubsystemBase {
 
       try {
         Thread.sleep(200);
-      } catch (Exception e) {}
+      } catch (Exception e) {
+      }
       m_followers[i].burnFlash();
     }
 
@@ -114,7 +119,9 @@ public abstract class VoltageSubsystem extends SubsystemBase {
   }
 
   public double getVolts() {
-    return Constants.kCurrentMode == Mode.REAL ? m_leader.getBusVoltage() : m_currentState.getVoltage();
+    return Constants.kCurrentMode == Mode.REAL
+        ? m_leader.getBusVoltage()
+        : m_currentState.getVoltage();
   }
 
   public VoltageSubsystemType getSubsystemType() {
@@ -126,9 +133,9 @@ public abstract class VoltageSubsystem extends SubsystemBase {
     subsystemPeriodic();
 
     if (Constants.kInfoMode) {
-      SmartDashboard.putString(m_constants.kSubsystemName + "/Current State", m_currentState.getName());
+      SmartDashboard.putString(
+          m_constants.kSubsystemName + "/Current State", m_currentState.getName());
     }
-    
   }
 
   public abstract void subsystemPeriodic();
@@ -148,7 +155,6 @@ public abstract class VoltageSubsystem extends SubsystemBase {
   }
 }
 
-
 // public class ExampleVoltageSubsystem extends VoltageSubsystem {
 
 //     private static ExampleVoltageSubsystem m_instance = null;
@@ -159,12 +165,12 @@ public abstract class VoltageSubsystem extends SubsystemBase {
 
 //     public static ExampleVoltageSubsystem getInstance() {
 //         if (m_instance == null) {
-//             m_instance = new ExampleVoltageSubsystem(ExampleConstants.kExampleVoltageSubsystemConstants);
+//             m_instance = new
+// ExampleVoltageSubsystem(ExampleConstants.kExampleVoltageSubsystemConstants);
 //         }
 
 //         return m_instance;
 //     }
-
 
 //     @Override
 //     public void subsystemPeriodic() {}
@@ -176,10 +182,10 @@ public abstract class VoltageSubsystem extends SubsystemBase {
 //         OFF(0, "Off"),
 //         FEEDING(3, "Up"),
 //         OUTTAKING(-3, "Outtaking");
-    
+
 //         private double voltage;
 //         private String name;
-    
+
 //         private ExampleVoltageSubsystemState(double voltage, String name) {
 //           this.voltage = voltage;
 //           this.name = name;
@@ -195,7 +201,5 @@ public abstract class VoltageSubsystem extends SubsystemBase {
 //             return voltage;
 //         }
 //     }
-    
-// }
 
- 
+// }
