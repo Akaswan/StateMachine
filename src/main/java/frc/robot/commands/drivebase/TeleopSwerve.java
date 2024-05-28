@@ -12,7 +12,6 @@ import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class TeleopSwerve extends Command {
   /** Creates a new TeleopSwerve. */
-  
   private SwerveDrive m_drivebase;
 
   private CommandXboxController m_driverController;
@@ -30,7 +29,14 @@ public class TeleopSwerve extends Command {
 
   private double m_percentModifier;
 
-  public TeleopSwerve(CommandXboxController driverController, int throttleAxis, int strafeAxis, int steerAxis, double percentModifier, boolean isOpenLoop, boolean isFieldRelative) {
+  public TeleopSwerve(
+      CommandXboxController driverController,
+      int throttleAxis,
+      int strafeAxis,
+      int steerAxis,
+      double percentModifier,
+      boolean isOpenLoop,
+      boolean isFieldRelative) {
     m_drivebase = SwerveDrive.getInstance();
 
     m_driverController = driverController;
@@ -53,9 +59,15 @@ public class TeleopSwerve extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_throttle = MathUtil.applyDeadband(-m_driverController.getRawAxis(m_throttleAxis), DriveConstants.kSwerveDeadBand);
-    m_strafe = MathUtil.applyDeadband(-m_driverController.getRawAxis(m_strafeAxis), DriveConstants.kSwerveDeadBand);
-    m_steer = MathUtil.applyDeadband(-m_driverController.getRawAxis(m_steerAxis), DriveConstants.kSwerveDeadBand);
+    m_throttle =
+        MathUtil.applyDeadband(
+            -m_driverController.getRawAxis(m_throttleAxis), DriveConstants.kSwerveDeadBand);
+    m_strafe =
+        MathUtil.applyDeadband(
+            -m_driverController.getRawAxis(m_strafeAxis), DriveConstants.kSwerveDeadBand);
+    m_steer =
+        MathUtil.applyDeadband(
+            -m_driverController.getRawAxis(m_steerAxis), DriveConstants.kSwerveDeadBand);
 
     m_throttle *= m_percentModifier;
     m_strafe *= m_percentModifier;

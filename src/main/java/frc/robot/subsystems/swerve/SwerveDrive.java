@@ -4,14 +4,11 @@
 
 package frc.robot.subsystems.swerve;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -26,10 +23,11 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.utilities.DriveUtils;
+import frc.lib.utilities.Utils.DriveUtils;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.RobotContainer;
+import org.littletonrobotics.junction.Logger;
 
 public class SwerveDrive extends SubsystemBase {
 
@@ -53,30 +51,33 @@ public class SwerveDrive extends SubsystemBase {
   private double m_simYaw;
 
   public SwerveDrive() {
-    m_modules = new SwerveModule[] {
-      new SwerveModule(DriveConstants.kFrontLeft),
-      new SwerveModule(DriveConstants.kFrontRight),
-      new SwerveModule(DriveConstants.kBackLeft),
-      new SwerveModule(DriveConstants.kBackRight)
-    };
+    m_modules =
+        new SwerveModule[] {
+          new SwerveModule(DriveConstants.kFrontLeft),
+          new SwerveModule(DriveConstants.kFrontRight),
+          new SwerveModule(DriveConstants.kBackLeft),
+          new SwerveModule(DriveConstants.kBackRight)
+        };
 
     m_pigeon = new Pigeon2(DriveConstants.kPigeonId);
 
     m_kinematics = new SwerveDriveKinematics(DriveConstants.kModuleTranslations);
 
-    m_moduleStates = new SwerveModuleState[] {
-      new SwerveModuleState(),
-      new SwerveModuleState(),
-      new SwerveModuleState(),
-      new SwerveModuleState()
-    };
-    
-    m_modulePositions = new SwerveModulePosition[] {
-      new SwerveModulePosition(),
-      new SwerveModulePosition(),
-      new SwerveModulePosition(),
-      new SwerveModulePosition()
-    };
+    m_moduleStates =
+        new SwerveModuleState[] {
+          new SwerveModuleState(),
+          new SwerveModuleState(),
+          new SwerveModuleState(),
+          new SwerveModuleState()
+        };
+
+    m_modulePositions =
+        new SwerveModulePosition[] {
+          new SwerveModulePosition(),
+          new SwerveModulePosition(),
+          new SwerveModulePosition(),
+          new SwerveModulePosition()
+        };
 
     Timer.delay(1.0);
     resetModulesToAbsolute();
@@ -97,31 +98,36 @@ public class SwerveDrive extends SubsystemBase {
     RobotContainer.m_mainTab.add(m_field);
 
     AutoBuilder.configureHolonomic(
-            this::getPose, // Robot pose supplier
-            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-            this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-            new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-                    DriveConstants.kMaxModuleSpeed, // Max module speed, in m/s
-                    DriveConstants.kDrivebaseRadius, // Drive base radius in meters. Distance from robot center to furthest module.
-                    new ReplanningConfig() // Default path replanning config. See the API for the options here
+        this::getPose, // Robot pose supplier
+        this::resetPose, // Method to reset odometry (will be called if your auto has a starting
+        // pose)
+        this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE
+        // ChassisSpeeds
+        new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in
+            // your Constants class
+            new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+            new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+            DriveConstants.kMaxModuleSpeed, // Max module speed, in m/s
+            DriveConstants
+                .kDrivebaseRadius, // Drive base radius in meters. Distance from robot center to
+            // furthest module.
+            new ReplanningConfig() // Default path replanning config. See the API for the options
+            // here
             ),
-            () -> {
-              // Boolean supplier that controls when the path will be mirrored for the red alliance
-              // This will flip the path being followed to the red side of the field.
-              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+        () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-              var alliance = DriverStation.getAlliance();
-              if (alliance.isPresent()) {
-                return alliance.get() == DriverStation.Alliance.Red;
-              }
-              return false;
-            },
-            this // Reference to this subsystem to set requirements
-    );
-
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+        },
+        this // Reference to this subsystem to set requirements
+        );
   }
 
   public static SwerveDrive getInstance() {
@@ -206,35 +212,37 @@ public class SwerveDrive extends SubsystemBase {
     m_driveMode = driveMode;
   }
 
-  public void drive(double throttle, double strafe, double steer, boolean isOpenLoop, boolean isFieldRelative) {
+  public void drive(
+      double throttle, double strafe, double steer, boolean isOpenLoop, boolean isFieldRelative) {
 
     if (throttle + strafe + steer != 0 && m_driveMode == DriveMode.XWHEELS) {
-      m_driveMode = DriveMode.TELEOP; 
+      m_driveMode = DriveMode.TELEOP;
     }
 
-    switch (m_driveMode){
+    switch (m_driveMode) {
       case TELEOP:
-
         throttle *= DriveConstants.kMaxModuleSpeed;
         strafe *= DriveConstants.kMaxModuleSpeed;
         steer *= DriveConstants.kMaxModuleSpeed;
 
-        m_chassisSpeeds = isFieldRelative ?
-        ChassisSpeeds.fromFieldRelativeSpeeds(throttle, strafe, steer, getYaw()) :
-        new ChassisSpeeds(throttle, strafe, steer);
+        m_chassisSpeeds =
+            isFieldRelative
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(throttle, strafe, steer, getYaw())
+                : new ChassisSpeeds(throttle, strafe, steer);
 
         m_chassisSpeeds = ChassisSpeeds.discretize(m_chassisSpeeds, Constants.kdt);
 
         m_moduleStates = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
 
-        if (RobotBase.isSimulation()) m_simYaw += Units.radiansToDegrees(m_chassisSpeeds.omegaRadiansPerSecond * Constants.kdt);
-        
+        if (RobotBase.isSimulation())
+          m_simYaw += Units.radiansToDegrees(m_chassisSpeeds.omegaRadiansPerSecond * Constants.kdt);
+
         break;
       case XWHEELS:
         DriveUtils.copyModuleStates(DriveConstants.kXWheels, m_moduleStates);
         break;
     }
-    
+
     setModuleStates(isOpenLoop);
   }
 

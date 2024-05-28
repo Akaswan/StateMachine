@@ -2,19 +2,19 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.lib.templates;
+package frc.lib.templates.subsystems;
 
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.templates.SubsystemConstants.RevMotorType;
-import frc.lib.templates.SubsystemConstants.VoltageSubsystemConstants;
+import frc.lib.templates.subsystems.SubsystemConstants.MotorControllerType;
+import frc.lib.templates.subsystems.SubsystemConstants.VoltageSubsystemConstants;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import org.littletonrobotics.junction.Logger;
 
 public abstract class VoltageSubsystem extends SubsystemBase {
 
@@ -32,7 +32,7 @@ public abstract class VoltageSubsystem extends SubsystemBase {
 
     m_currentState = m_constants.kInitialState;
 
-    if (m_constants.kLeaderConstants.kRevMotorType == RevMotorType.CAN_SPARK_MAX) {
+    if (m_constants.kLeaderConstants.kMotorControllerType == MotorControllerType.SPARK_MAX) {
       m_leader =
           new CANSparkMax(
               m_constants.kLeaderConstants.kID, m_constants.kLeaderConstants.kMotorType);
@@ -46,7 +46,7 @@ public abstract class VoltageSubsystem extends SubsystemBase {
     m_leader.setInverted(m_constants.kLeaderConstants.kInverted);
 
     if (m_constants.kFollowerConstants.length > 0) {
-      if (m_constants.kFollowerConstants[0].kRevMotorType == RevMotorType.CAN_SPARK_MAX) {
+      if (m_constants.kFollowerConstants[0].kMotorControllerType == MotorControllerType.SPARK_MAX) {
         m_followers = new CANSparkMax[m_constants.kFollowerConstants.length];
       } else {
         m_followers = new CANSparkFlex[m_constants.kFollowerConstants.length];
@@ -63,14 +63,10 @@ public abstract class VoltageSubsystem extends SubsystemBase {
     m_leader.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 500);
     m_leader.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 500);
 
-    try {
-      Thread.sleep(200);
-    } catch (Exception e) {
-    }
     m_leader.burnFlash();
 
     for (int i = 0; i < m_constants.kFollowerConstants.length; i++) {
-      if (m_constants.kFollowerConstants[0].kRevMotorType == RevMotorType.CAN_SPARK_MAX) {
+      if (m_constants.kFollowerConstants[0].kMotorControllerType == MotorControllerType.SPARK_MAX) {
         m_followers[i] =
             new CANSparkMax(
                 m_constants.kFollowerConstants[i].kID,
@@ -133,8 +129,9 @@ public abstract class VoltageSubsystem extends SubsystemBase {
     subsystemPeriodic();
 
     if (Constants.kInfoMode) {
-      SmartDashboard.putString(
-          m_constants.kSubsystemName + "/Current State", m_currentState.getName());
+      Logger.recordOutput(
+          m_constants.kSuperstructureName + "/" + m_constants.kSubsystemName + "/Current State",
+          m_currentState.getName());
     }
   }
 

@@ -9,10 +9,13 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.drivebase.TeleopSwerve;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.LED.LED;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.subsystems.swerve.SwerveDrive.DriveMode;
@@ -37,6 +40,8 @@ public class RobotContainer {
 
   public static SwerveDrive m_drivebase = SwerveDrive.getInstance();
 
+  public static Arm m_arm = Arm.getInstance();
+
   // SENDABLE CHOOSER \\
   public static SendableChooser<Command> autoChooser;
 
@@ -56,23 +61,27 @@ public class RobotContainer {
 
     // CONFIGURE DEFAULT COMMANDS \\
     m_drivebase.setDefaultCommand(
-      new TeleopSwerve(
-        m_driverController, 
-        OperatorConstants.kThrottleAxis, 
-        OperatorConstants.kStrafeAxis, 
-        OperatorConstants.kSteerAxis, 
-        OperatorConstants.kPercentModifier, 
-        false, 
-        true
-      )
-    );
+        new TeleopSwerve(
+            m_driverController,
+            OperatorConstants.kThrottleAxis,
+            OperatorConstants.kStrafeAxis,
+            OperatorConstants.kSteerAxis,
+            OperatorConstants.kPercentModifier,
+            false,
+            true));
+    m_arm.setDefaultCommand(Commands.run(m_arm::manualControl, m_arm));
 
     configureButtonBindings();
   }
 
   private void configureButtonBindings() {
     m_driverController.start().onTrue(new InstantCommand(() -> m_drivebase.setGyro(0)));
-    m_driverController.x().onTrue(new InstantCommand(() -> m_drivebase.setDriveMode(DriveMode.XWHEELS)));
+    m_driverController
+        .x()
+        .onTrue(new InstantCommand(() -> m_drivebase.setDriveMode(DriveMode.XWHEELS)));
+
+    m_operatorController.a().onTrue(m_arm.moveWithProfile(ArmState.UP, m_arm));
+    m_operatorController.b().onTrue(m_arm.moveWithProfile(ArmState.DOWN, m_arm));
   }
 
   public Command getAutonomousCommand() {

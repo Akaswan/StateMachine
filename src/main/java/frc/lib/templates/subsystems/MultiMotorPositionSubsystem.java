@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.lib.templates;
+package frc.lib.templates.subsystems;
 
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkBase.ControlType;
@@ -16,8 +16,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.templates.SubsystemConstants.MultiMotorPositionSubsystemConstants;
-import frc.lib.templates.SubsystemConstants.RevMotorType;
+import frc.lib.templates.subsystems.SubsystemConstants.MotorControllerType;
+import frc.lib.templates.subsystems.SubsystemConstants.MultiMotorPositionSubsystemConstants;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 
@@ -54,7 +54,7 @@ public abstract class MultiMotorPositionSubsystem extends SubsystemBase {
     m_currentState = m_constants.kInitialState;
     m_desiredState = m_constants.kInitialState;
 
-    if (m_constants.kMotorConstants[0].kRevMotorType == RevMotorType.CAN_SPARK_MAX) {
+    if (m_constants.kMotorConstants[0].kMotorControllerType == MotorControllerType.SPARK_MAX) {
       m_motors = new CANSparkMax[m_constants.kMotorConstants.length];
     } else {
       m_motors = new CANSparkFlex[m_constants.kMotorConstants.length];
@@ -66,7 +66,7 @@ public abstract class MultiMotorPositionSubsystem extends SubsystemBase {
     m_profileStartVelocity = new double[m_motors.length];
 
     for (int i = 0; i < m_motors.length; i++) {
-      if (m_constants.kMotorConstants[i].kRevMotorType == RevMotorType.CAN_SPARK_MAX) {
+      if (m_constants.kMotorConstants[i].kMotorControllerType == MotorControllerType.SPARK_MAX) {
         m_motors[i] =
             new CANSparkMax(
                 m_constants.kMotorConstants[i].kID, m_constants.kMotorConstants[i].kMotorType);
@@ -154,6 +154,7 @@ public abstract class MultiMotorPositionSubsystem extends SubsystemBase {
   }
 
   public abstract void manualControl();
+  // TODO Implement
 
   // Example implementation for one motor
   // Really on a per mech basis, you have to override this if you want to use it

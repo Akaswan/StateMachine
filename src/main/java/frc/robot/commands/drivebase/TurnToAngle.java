@@ -7,7 +7,7 @@ package frc.robot.commands.drivebase;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.lib.utilities.DriveUtils;
+import frc.lib.utilities.Utils.DriveUtils;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class TurnToAngle extends Command {
@@ -48,7 +48,8 @@ public class TurnToAngle extends Command {
   public void execute() {
     double speeds =
         angleController.calculate(
-            DriveUtils.getAdjustedYawDegrees(m_drivebase.getYaw().getDegrees(), m_targetAngle), 180);
+            DriveUtils.getAdjustedYawDegrees(m_drivebase.getYaw().getDegrees(), m_targetAngle),
+            180);
 
     speeds = MathUtil.clamp(speeds, -1, 1);
     m_drivebase.drive(0, 0, speeds, true, true);
@@ -62,7 +63,8 @@ public class TurnToAngle extends Command {
   @Override
   public boolean isFinished() {
     if (Math.abs(
-            DriveUtils.getAdjustedYawDegrees(m_drivebase.getYaw().getDegrees(), m_targetAngle) - 180)
+            DriveUtils.getAdjustedYawDegrees(m_drivebase.getYaw().getDegrees(), m_targetAngle)
+                - 180)
         < deadBand) {
       m_drivebase.drive(0, 0, 0, true, true);
       return true;

@@ -5,8 +5,8 @@
 package frc.robot.commands.superstructure;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.lib.templates.MultiMotorPositionSubsystem;
-import frc.lib.templates.MultiMotorPositionSubsystem.MultiMotorPositionSubsystemState;
+import frc.lib.templates.subsystems.MultiMotorPositionSubsystem;
+import frc.lib.templates.subsystems.MultiMotorPositionSubsystem.MultiMotorPositionSubsystemState;
 
 public class SetMultiMotorPositionSubsystemState extends Command {
   /** Creates a new SetMechState. */

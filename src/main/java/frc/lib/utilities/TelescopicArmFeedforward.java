@@ -8,7 +8,7 @@ package frc.lib.utilities;
  * A helper class that computes feedforward outputs for a simple arm (modeled as a motor acting
  * against the force of gravity on a beam suspended at an angle).
  */
-public class TelescopingArmFeedforward {
+public class TelescopicArmFeedforward {
   public final double ks;
   public double kg;
   public final double minkg;
@@ -29,7 +29,7 @@ public class TelescopingArmFeedforward {
    * @param kv The velocity gain.
    * @param ka The acceleration gain.
    */
-  public TelescopingArmFeedforward(
+  public TelescopicArmFeedforward(
       double ks,
       double minkg,
       double maxkg,
@@ -58,7 +58,7 @@ public class TelescopingArmFeedforward {
    * @param kg The gravity gain.
    * @param kv The velocity gain.
    */
-  public TelescopingArmFeedforward(
+  public TelescopicArmFeedforward(
       double ks, double minkg, double maxkg, double kv, double minTelescope, double maxTelescope) {
     this(ks, minkg, maxkg, kv, 0, 0, minTelescope, maxTelescope);
   }

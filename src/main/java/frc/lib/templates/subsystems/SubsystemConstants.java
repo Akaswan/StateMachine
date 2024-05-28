@@ -1,31 +1,34 @@
-package frc.lib.templates;
+package frc.lib.templates.subsystems;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import frc.lib.templates.MultiMotorPositionSubsystem.MultiMotorPositionSubsystemState;
-import frc.lib.templates.MultiMotorPositionSubsystem.MultiMotorPositionSubsystemType;
-import frc.lib.templates.PositionSubsystem.PositionSubsystemState;
-import frc.lib.templates.PositionSubsystem.PositionSubsystemType;
-import frc.lib.templates.VelocitySubsystem.VelocitySubsystemState;
-import frc.lib.templates.VelocitySubsystem.VelocitySubsystemType;
-import frc.lib.templates.VoltageSubsystem.VoltageSubsystemState;
-import frc.lib.templates.VoltageSubsystem.VoltageSubsystemType;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import frc.lib.templates.subsystems.MultiMotorPositionSubsystem.MultiMotorPositionSubsystemState;
+import frc.lib.templates.subsystems.MultiMotorPositionSubsystem.MultiMotorPositionSubsystemType;
+import frc.lib.templates.subsystems.PositionSubsystem.SubsystemState;
+import frc.lib.templates.subsystems.VelocitySubsystem.VelocitySubsystemState;
+import frc.lib.templates.subsystems.VelocitySubsystem.VelocitySubsystemType;
+import frc.lib.templates.subsystems.VoltageSubsystem.VoltageSubsystemState;
+import frc.lib.templates.subsystems.VoltageSubsystem.VoltageSubsystemType;
 
 public class SubsystemConstants {
 
-  public static class SparkConstants {
+  public static class MotorConstants {
     public String kName = "ERROR_ASSIGN_NAME";
-    public RevMotorType kRevMotorType = null;
+    public MotorControllerType kMotorControllerType = null;
     public int kID = 0;
     public IdleMode kIdleMode = IdleMode.kBrake;
     public MotorType kMotorType = MotorType.kBrushless;
     public int kCurrentLimit = 0;
     public boolean kInverted = false;
+    public double kHomePosition = 0.0;
+    public double kPositionConversionFactor = 1;
+    public double kVelocityConversionFactor = 1;
     public double kKp = 0.0;
     public double kKi = 0.0;
     public double kKd = 0.0;
 
-    public double kKff = 0.0; // Really only use this for velocity control
+    public double kKff = 0.0; // Really only use this for velocity control (Velocity feed forward)
 
     // If you want to use custom feedforward
     public double kKs = 0.0;
@@ -40,27 +43,14 @@ public class SubsystemConstants {
     public String kSubsystemName = "ERROR_ASSIGN_A_NAME";
     public String kSuperstructureName = "ERROR_ASSIGN_A_NAME";
 
-    public PositionSubsystemType kSubsystemType = null;
+    public MotorConstants kLeaderConstants = new MotorConstants();
+    public MotorConstants[] kFollowerConstants = new MotorConstants[0];
 
-    public SparkConstants kLeaderConstants = new SparkConstants();
-    public SparkConstants[] kFollowerConstants = new SparkConstants[0];
-
-    public PositionSubsystemState kInitialState = null;
-    public PositionSubsystemState kManualState = null;
-    public PositionSubsystemState kTransitionState = null;
-
-    // Servo Motor Subsystem Constants \\
-    public double kHomePosition = 0.0;
-    public double kPositionConversionFactor =
-        1.0; // To find degrees: 360/gear ration ex 360/100 for 100:1
+    public SubsystemState kInitialState = null;
 
     public double kSetpointTolerance = 0.0; // Tolerance for atSetpoint()
 
-    public int kDefaultSlot =
-        0; // PID Slot, make more if more than one set of pid constants are used
-
-    public double kMaxVelocity = 0.0; // Max velocity for motion profile
-    public double kMaxAcceleration = 0.0; // Max acceleration for motion profile
+    public TrapezoidProfile.Constraints kProfileConstraints = null;
 
     // Max/Min positions the subsystem should be able to move
     public double kMaxPosition = Double.POSITIVE_INFINITY;
@@ -68,8 +58,8 @@ public class SubsystemConstants {
 
     // Manual constants
     public ManualControlMode kManualControlMode = null;
-    public double kManualMultiplier = 0;
-    public double kManualDeadBand = 0;
+    public double kManualMultiplier = 1;
+    public double kManualDeadBand = 0.1;
   }
 
   public static class MultiMotorPositionSubsystemConstants {
@@ -80,7 +70,7 @@ public class SubsystemConstants {
 
     public MultiMotorPositionSubsystemType kSubsystemType = null;
 
-    public SparkConstants[] kMotorConstants = new SparkConstants[0];
+    public MotorConstants[] kMotorConstants = new MotorConstants[0];
 
     public MultiMotorPositionSubsystemState kInitialState = null;
     public MultiMotorPositionSubsystemState kManualState = null;
@@ -115,8 +105,8 @@ public class SubsystemConstants {
 
     public VoltageSubsystemType kSubsystemType = null;
 
-    public SparkConstants kLeaderConstants = new SparkConstants();
-    public SparkConstants[] kFollowerConstants = new SparkConstants[0];
+    public MotorConstants kLeaderConstants = new MotorConstants();
+    public MotorConstants[] kFollowerConstants = new MotorConstants[0];
 
     public VoltageSubsystemState kInitialState = null;
   }
@@ -127,7 +117,7 @@ public class SubsystemConstants {
 
     public VelocitySubsystemType kSubsystemType = null;
 
-    public SparkConstants[] kMotorConstants = new SparkConstants[0];
+    public MotorConstants[] kMotorConstants = new MotorConstants[0];
 
     public VelocitySubsystemState kInitialState = null;
     public VelocitySubsystemState kTransitionState = null;
@@ -142,9 +132,10 @@ public class SubsystemConstants {
         0; // PID Slot, make more if more than one set of pid constants are used
   }
 
-  public enum RevMotorType {
-    CAN_SPARK_MAX,
-    CAN_SPARK_FLEX
+  public enum MotorControllerType {
+    SPARK_MAX,
+    SPARK_FLEX,
+    TALON_FX
   }
 
   public static enum ManualControlMode {
