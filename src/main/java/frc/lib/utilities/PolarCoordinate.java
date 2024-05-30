@@ -2,15 +2,7 @@ package frc.lib.utilities;
 
 import java.util.*;
 
-public class PolarCoordinate {
-  private double theta;
-  private double r;
-
-  public PolarCoordinate(double theta, double r) {
-    this.theta = theta;
-    this.r = r;
-  }
-
+public record PolarCoordinate(double theta, double r) {
   // Implement equals and hashCode methods for proper comparison
   @Override
   public boolean equals(Object obj) {

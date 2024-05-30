@@ -1,8 +1,8 @@
 package frc.robot.subsystems.LED.effects;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import frc.lib.utilities.RGB;
 import frc.robot.subsystems.LED.LED.LEDEffect;
+import frc.robot.subsystems.LED.LED.RGB;
 
 public class BreatheEffect extends TimedEffect implements LEDEffect {
 
@@ -21,9 +21,9 @@ public class BreatheEffect extends TimedEffect implements LEDEffect {
     for (int i = 0; i < buffer.getLength(); i++) {
       buffer.setRGB(
           i,
-          (int) (m_color.red * multiplier),
-          (int) (m_color.green * multiplier),
-          (int) (m_color.blue * multiplier));
+          (int) (m_color.green() * multiplier),
+          (int) (m_color.blue() * multiplier),
+          (int) (m_color.red() * multiplier));
     }
 
     incrementTime();

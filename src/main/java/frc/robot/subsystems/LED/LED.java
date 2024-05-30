@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
 
 public class LED extends SubsystemBase {
+
+  public record RGB(int red, int green, int blue) {}
+
   /** Creates a new LED. */
   private static LED m_instance = null;
 
@@ -56,3 +59,5 @@ public class LED extends SubsystemBase {
     void runEffect(AddressableLEDBuffer buffer);
   }
 }
+
+

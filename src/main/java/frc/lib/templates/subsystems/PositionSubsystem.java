@@ -202,7 +202,7 @@ public abstract class PositionSubsystem extends SubsystemBase {
         },
         subsystem);
   }
-  
+
   public double getPosition() {
     return Constants.kCurrentMode == Mode.REAL
         ? m_leader.getPostion()
