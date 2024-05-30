@@ -3,6 +3,7 @@ package frc.robot.subsystems.LED.effects;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import frc.robot.subsystems.LED.LED.LEDEffect;
 import frc.robot.subsystems.LED.LED.RGB;
+import frc.robot.subsystems.LED.LED.StripSegment;
 
 public class BreatheEffect extends TimedEffect implements LEDEffect {
 
@@ -14,11 +15,11 @@ public class BreatheEffect extends TimedEffect implements LEDEffect {
   }
 
   @Override
-  public void runEffect(AddressableLEDBuffer buffer) {
+  public void runEffect(AddressableLEDBuffer buffer, StripSegment segment) {
     double percentPassed = m_timePassed / m_frameTime;
     double multiplier =
         percentPassed > 0.5 ? (percentPassed * 2) - 1 : (2 - (percentPassed * 2)) - 1;
-    for (int i = 0; i < buffer.getLength(); i++) {
+    for (int i = segment.startIndex(); i <= segment.endIndex(); i++) {
       buffer.setRGB(
           i,
           (int) (m_color.green() * multiplier),

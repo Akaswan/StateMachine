@@ -11,6 +11,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PS4Controller.Axis;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.lib.utilities.SwerveModuleConstants;
+import frc.robot.subsystems.LED.LED.StripSegment;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -160,6 +161,9 @@ public final class Constants {
   public class LEDConstants {
     public static final int kLEDLength = 50;
     public static final int kLEDPort = 0;
+
+    public static final StripSegment kArmLeftSegment = new StripSegment("Arm Left", 0, 24);
+    public static final StripSegment kArmRightSegment = new StripSegment("Arm Right", 25, 49);
   }
 
   public static enum Mode {
