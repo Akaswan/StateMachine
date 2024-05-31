@@ -5,11 +5,11 @@ import frc.robot.subsystems.LED.LED.LEDEffect;
 import frc.robot.subsystems.LED.LED.RGB;
 import frc.robot.subsystems.LED.LED.StripSegment;
 
-public class BreatheEffect extends TimedEffect implements LEDEffect {
+public class FlashEffect extends TimedEffect implements LEDEffect {
 
   private RGB m_color;
 
-  public BreatheEffect(RGB color, double effectTime) {
+  public FlashEffect(RGB color, double effectTime) {
     super(effectTime);
     m_color = color;
   }
@@ -17,7 +17,7 @@ public class BreatheEffect extends TimedEffect implements LEDEffect {
   @Override
   public void runEffect(AddressableLEDBuffer buffer, StripSegment segment) {
     double multiplier =
-        percentPassed > 0.5 ? (percentPassed * 2) - 1 : (2 - (percentPassed * 2)) - 1;
+        percentPassed > 0.5 ? 0 : 1;
     for (int i = segment.startIndex(); i <= segment.endIndex(); i++) {
       buffer.setRGB(
           i,

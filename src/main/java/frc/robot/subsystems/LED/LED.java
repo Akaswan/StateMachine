@@ -75,6 +75,23 @@ public class LED extends SubsystemBase {
     m_led.setData(m_ledBuffer);
   }
 
+  public static void extendEffectList(ArrayList<Double> list, int length) {
+    while (list.size() < length) {
+      list.add(0);
+    }
+  }
+
+  public static void addListToBuffer(ArrayList<Double> list, RGB color, AddressableLEDBuffer buffer, StripSegment segment) {
+    for (int i = segment.startIndex(); i <= segment.endIndex(); i++) {
+      buffer.setRGB(
+        i,
+        (int) (color.green() * list.get(i)),
+        (int) (color.blue() * list.get(i)),
+        (int) (color.red() * list.get(i));
+      )
+    }
+  }
+
   public interface LEDEffect {
     void runEffect(AddressableLEDBuffer buffer, StripSegment segment);
   }
