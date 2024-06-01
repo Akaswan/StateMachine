@@ -1,11 +1,10 @@
 package frc.robot.subsystems.LED.effects.timedeffects;
 
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.LED.LED.LEDEffect;
 import frc.robot.subsystems.LED.LED.RGB;
 import frc.robot.subsystems.LED.LED.StripSegment;
 import java.util.ArrayList;
-
-import edu.wpi.first.wpilibj.Timer;
 
 public class ListEffect extends TimedEffect implements LEDEffect {
 

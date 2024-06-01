@@ -11,6 +11,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PS4Controller.Axis;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.lib.utilities.SwerveModuleConstants;
+import frc.robot.subsystems.LED.LED.RGB;
 import frc.robot.subsystems.LED.LED.StripSegment;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -168,7 +169,13 @@ public final class Constants {
     public static final StripSegment kArmRightSegment = new StripSegment("Arm Right", 5, 50);
 
     public static final ArrayList<Double> kSnakeEffectBlueprint =
-        new ArrayList<>(Arrays.asList(.3, .5, 1.0, 1.0, .5, .3));
+        new ArrayList<>(Arrays.asList(1.0, 1.0, 1.0, 1.0, 1.0));
+    
+    public static final RGB kTeal = new RGB(0, 122, 133);
+    public static final RGB kRed = new RGB(255, 0, 0);
+    public static final RGB kGreen = new RGB(0, 255, 0);
+    public static final RGB kBlue = new RGB(0, 0, 255);
+    public static final RGB kWhite = new RGB(255, 255, 255);
   }
 
   public static enum Mode {

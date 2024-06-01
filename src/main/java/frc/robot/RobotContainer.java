@@ -12,15 +12,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.LEDConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.drivebase.TeleopSwerve;
-import frc.robot.commands.superstructure.SetLEDEffect;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.LED.LED;
-import frc.robot.subsystems.LED.LED.RGB;
-import frc.robot.subsystems.LED.effects.timedeffects.ListEffect;
-import frc.robot.subsystems.LED.effects.timedeffects.RainbowEffect;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.subsystems.swerve.SwerveDrive.DriveMode;
 
@@ -86,35 +81,6 @@ public class RobotContainer {
 
     // m_operatorController.a().onTrue(m_arm.moveWithProfile(ArmState.UP, m_arm));
     // m_operatorController.b().onTrue(m_arm.moveWithProfile(ArmState.DOWN, m_arm));
-
-    m_operatorController
-        .a()
-        .onTrue(
-            new SetLEDEffect(
-                new ListEffect(
-                    .005,
-                    new RGB(3, 252, 57),
-                    LEDConstants.kArmLeftSegment,
-                    LEDConstants.kSnakeEffectBlueprint)));
-    m_operatorController
-        .b()
-        .onTrue(new SetLEDEffect(new RainbowEffect(.02, LEDConstants.kArmRightSegment)));
-
-    m_operatorController
-        .x()
-        .onTrue(
-            new SetLEDEffect(
-                new ListEffect(
-                    .01,
-                    new RGB(3, 252, 57),
-                    LEDConstants.kArmRightSegment,
-                    LEDConstants.kSnakeEffectBlueprint,
-                    true,
-                    .25,
-                    1)));
-    m_operatorController
-        .y()
-        .onTrue(new SetLEDEffect(new RainbowEffect(.01, LEDConstants.kArmLeftSegment)));
   }
 
   public Command getAutonomousCommand() {
