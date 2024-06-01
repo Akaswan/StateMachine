@@ -164,11 +164,11 @@ public final class Constants {
     public static final int kLEDLength = 50;
     public static final int kLEDPort = 0;
 
-    public static final StripSegment kArmLeftSegment = new StripSegment("Arm Left", 0, 25);
-    public static final StripSegment kArmRightSegment = new StripSegment("Arm Right", 25, 50);
+    public static final StripSegment kArmLeftSegment = new StripSegment("Arm Left", 0, 5);
+    public static final StripSegment kArmRightSegment = new StripSegment("Arm Right", 5, 50);
 
     public static final ArrayList<Double> kSnakeEffectBlueprint =
-        new ArrayList<>(Arrays.asList(.1, .5, 1.0, 1.0, .5, .1));
+        new ArrayList<>(Arrays.asList(.3, .5, 1.0, 1.0, .5, .3));
   }
 
   public static enum Mode {

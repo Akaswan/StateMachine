@@ -19,8 +19,8 @@ import frc.robot.commands.superstructure.SetLEDEffect;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.LED.LED;
 import frc.robot.subsystems.LED.LED.RGB;
-import frc.robot.subsystems.LED.effects.ListEffect;
-import frc.robot.subsystems.LED.effects.RainbowEffect;
+import frc.robot.subsystems.LED.effects.timedeffects.ListEffect;
+import frc.robot.subsystems.LED.effects.timedeffects.RainbowEffect;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.subsystems.swerve.SwerveDrive.DriveMode;
 
@@ -98,7 +98,7 @@ public class RobotContainer {
                     LEDConstants.kSnakeEffectBlueprint)));
     m_operatorController
         .b()
-        .onTrue(new SetLEDEffect(new RainbowEffect(.005, 1, LEDConstants.kArmRightSegment)));
+        .onTrue(new SetLEDEffect(new RainbowEffect(.02, LEDConstants.kArmRightSegment)));
 
     m_operatorController
         .x()
@@ -108,10 +108,13 @@ public class RobotContainer {
                     .01,
                     new RGB(3, 252, 57),
                     LEDConstants.kArmRightSegment,
-                    LEDConstants.kSnakeEffectBlueprint)));
+                    LEDConstants.kSnakeEffectBlueprint,
+                    true,
+                    .25,
+                    1)));
     m_operatorController
         .y()
-        .onTrue(new SetLEDEffect(new RainbowEffect(.01, 1, LEDConstants.kArmLeftSegment)));
+        .onTrue(new SetLEDEffect(new RainbowEffect(.01, LEDConstants.kArmLeftSegment)));
   }
 
   public Command getAutonomousCommand() {

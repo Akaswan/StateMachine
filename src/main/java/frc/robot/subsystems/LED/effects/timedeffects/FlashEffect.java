@@ -1,4 +1,4 @@
-package frc.robot.subsystems.LED.effects;
+package frc.robot.subsystems.LED.effects.timedeffects;
 
 import frc.robot.subsystems.LED.LED.LEDEffect;
 import frc.robot.subsystems.LED.LED.RGB;

@@ -1,22 +1,23 @@
-package frc.robot.subsystems.LED.effects;
+package frc.robot.subsystems.LED.effects.timedeffects;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import frc.robot.Constants;
 import frc.robot.subsystems.LED.LED;
 import frc.robot.subsystems.LED.LED.LEDEffect;
 import frc.robot.subsystems.LED.LED.StripSegment;
 
 public class RainbowEffect extends TimedEffect implements LEDEffect {
 
-  private double m_hueIncrement;
+  private double m_hueIncrement = 1;
 
   private StripSegment m_segment;
 
-  public RainbowEffect(double effectTime, double hueIncrement, StripSegment segment) {
+  public RainbowEffect(double effectTime, StripSegment segment) {
     super(effectTime, null, segment);
 
     m_segment = segment;
 
-    m_hueIncrement = hueIncrement;
+    if (m_effectTime < Constants.kdt) m_hueIncrement = Constants.kdt / m_effectTime;
   }
 
   private int m_rainbowFirstPixelHue = 0;
