@@ -9,7 +9,6 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.LED.LED;
 import frc.robot.subsystems.LED.LED.LEDEffect;
-import frc.robot.subsystems.LED.LED.StripSegment;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -20,8 +19,6 @@ public class SetLEDEffect extends Command {
   private double m_timePassed = 0.0;
   private double m_runTime;
   private LEDEffect m_queuedEffect = null;
-  private StripSegment m_segment;
-  private StripSegment m_queuedSegment;
 
   private LED m_led = LED.getInstance();
 
@@ -34,25 +31,10 @@ public class SetLEDEffect extends Command {
    *
    * @param effect
    */
-  public SetLEDEffect(LEDEffect effect, StripSegment segment) {
+  public SetLEDEffect(LEDEffect effect) {
     m_effect = effect;
-    m_segment = segment;
 
     addRequirements(RobotContainer.m_LED);
-  }
-
-  public SetLEDEffect(
-      LEDEffect effect,
-      double runTime,
-      LEDEffect queuedEffect,
-      StripSegment segment,
-      StripSegment queuedSegment) {
-    this(effect, segment);
-
-    m_runTime = runTime;
-    m_queuedEffect = queuedEffect;
-    m_segment = segment;
-    m_queuedSegment = queuedSegment;
   }
 
   /**
@@ -69,15 +51,12 @@ public class SetLEDEffect extends Command {
    * @param runTime The duration (in seconds) for which the effect should run.
    * @param queuedEffect The LEDEffect to be applied after the current effect finishes.
    */
-  public SetLEDEffect(
-      LEDEffect effect, double runTime, LEDEffect queuedEffect, StripSegment segment) {
-    this(effect, runTime, queuedEffect, segment, segment);
-  }
+  public SetLEDEffect(LEDEffect effect, double runTime, LEDEffect queuedEffect) {}
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_led.setEffect(m_effect, m_segment);
+    m_led.setEffect(m_effect);
   }
 
   @Override
@@ -88,7 +67,7 @@ public class SetLEDEffect extends Command {
   @Override
   public void end(boolean interrupted) {
     if (m_queuedEffect != null && !interrupted) {
-      m_led.setEffect(m_queuedEffect, m_queuedSegment);
+      m_led.setEffect(m_queuedEffect);
     }
   }
 

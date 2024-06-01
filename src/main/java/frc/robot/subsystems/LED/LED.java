@@ -15,6 +15,13 @@ public class LED extends SubsystemBase {
 
   public record RGB(int red, int green, int blue) {}
 
+  /**
+   * StripSegment
+   *
+   * @param name Name of the Segment
+   * @param startIndex Index of the start of the segment (Inclusive)
+   * @param endIndex Index of the end of the segment (Exclusive)
+   */
   public record StripSegment(String name, int startIndex, int endIndex)
       implements Comparable<StripSegment> {
     @Override
@@ -56,17 +63,21 @@ public class LED extends SubsystemBase {
     return m_instance;
   }
 
-  public void setEffect(LEDEffect effect, StripSegment segment) {
-    m_effectMap.replace(segment, effect);
+  public AddressableLEDBuffer getBuffer() {
+    return m_ledBuffer;
+  }
+
+  public void setEffect(LEDEffect effect) {
+    m_effectMap.replace(effect.getSegment(), effect);
   }
 
   @Override
   public void periodic() {
     for (Map.Entry<StripSegment, LEDEffect> entry : m_effectMap.entrySet()) {
       if (entry.getValue() != null) {
-        entry.getValue().runEffect(m_ledBuffer, entry.getKey());
+        entry.getValue().runEffect();
       } else {
-        for (int i = entry.getKey().startIndex(); i <= entry.getKey().endIndex(); i++) {
+        for (int i = entry.getKey().startIndex(); i < entry.getKey().endIndex(); i++) {
           m_ledBuffer.setRGB(i, 0, 0, 0);
         }
       }
@@ -75,24 +86,9 @@ public class LED extends SubsystemBase {
     m_led.setData(m_ledBuffer);
   }
 
-  public static void extendEffectList(ArrayList<Double> list, int length) {
-    while (list.size() < length) {
-      list.add(0);
-    }
-  }
-
-  public static void addListToBuffer(ArrayList<Double> list, RGB color, AddressableLEDBuffer buffer, StripSegment segment) {
-    for (int i = segment.startIndex(); i <= segment.endIndex(); i++) {
-      buffer.setRGB(
-        i,
-        (int) (color.green() * list.get(i)),
-        (int) (color.blue() * list.get(i)),
-        (int) (color.red() * list.get(i));
-      )
-    }
-  }
-
   public interface LEDEffect {
-    void runEffect(AddressableLEDBuffer buffer, StripSegment segment);
+    void runEffect();
+
+    StripSegment getSegment();
   }
 }

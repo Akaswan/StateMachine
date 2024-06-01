@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.PS4Controller.Axis;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.lib.utilities.SwerveModuleConstants;
 import frc.robot.subsystems.LED.LED.StripSegment;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -162,8 +164,11 @@ public final class Constants {
     public static final int kLEDLength = 50;
     public static final int kLEDPort = 0;
 
-    public static final StripSegment kArmLeftSegment = new StripSegment("Arm Left", 0, 24);
-    public static final StripSegment kArmRightSegment = new StripSegment("Arm Right", 25, 49);
+    public static final StripSegment kArmLeftSegment = new StripSegment("Arm Left", 0, 25);
+    public static final StripSegment kArmRightSegment = new StripSegment("Arm Right", 25, 50);
+
+    public static final ArrayList<Double> kSnakeEffectBlueprint =
+        new ArrayList<>(Arrays.asList(.1, .5, 1.0, 1.0, .5, .1));
   }
 
   public static enum Mode {
