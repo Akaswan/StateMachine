@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.drivebase.TeleopSwerve;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.LED.LED;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.subsystems.swerve.SwerveDrive.DriveMode;
@@ -79,8 +80,8 @@ public class RobotContainer {
         .x()
         .onTrue(new InstantCommand(() -> m_drivebase.setDriveMode(DriveMode.XWHEELS)));
 
-    // m_operatorController.a().onTrue(m_arm.moveWithProfile(ArmState.UP, m_arm));
-    // m_operatorController.b().onTrue(m_arm.moveWithProfile(ArmState.DOWN, m_arm));
+    m_operatorController.a().onTrue(m_arm.moveWithProfile(ArmState.UP, m_arm));
+    m_operatorController.b().onTrue(m_arm.moveWithProfile(ArmState.DOWN, m_arm));
   }
 
   public Command getAutonomousCommand() {

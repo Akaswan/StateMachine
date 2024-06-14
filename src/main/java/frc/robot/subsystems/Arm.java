@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import frc.lib.templates.builders.MotorConstantsBuilder;
@@ -16,8 +17,12 @@ public class Arm extends PositionSubsystem {
 
   private static Arm m_instance = null;
 
+  private CANSparkMax m_motor = new CANSparkMax(32, MotorType.kBrushless);
+
   public Arm(PositionSubsystemConstants constants) {
     super(constants);
+
+    m_motor.follow((CANSparkMax) m_leader.getMotor());
   }
 
   public static Arm getInstance() {
@@ -29,12 +34,14 @@ public class Arm extends PositionSubsystem {
   }
 
   @Override
-  public void subsystemPeriodic() {}
+  public void subsystemPeriodic() {
+    System.out.println(m_motor.getAppliedOutput());
+  }
 
   @Override
   public void outputTelemetry() {}
 
-  public enum ArmState implements SubsystemState {
+  public enum ArmState implements PositionSubsystemState {
     DOWN(0),
     UP(45);
 
@@ -80,18 +87,6 @@ public class Arm extends PositionSubsystem {
     public void setVelocity(double velocity) {
       state.velocity = velocity;
     }
-
-    @Override
-    public double getVoltage() {
-      throw new UnsupportedOperationException(
-          "'getVoltage()' is not to be used in a position subsystem");
-    }
-
-    @Override
-    public void setVoltage(double voltage) {
-      throw new UnsupportedOperationException(
-          "'setVoltage()' is not to be used in a position subsystem");
-    }
   }
 
   public class ArmConstants {
@@ -118,7 +113,7 @@ public class Arm extends PositionSubsystem {
             .withIdleMode(IdleMode.kBrake)
             .withMotorType(MotorType.kBrushless)
             .withCurrentLimit(80)
-            .withInverted(false)
+            .withInverted(true)
             .withHomePosition(0.0)
             .withPositionConversion(1)
             .withVelocityConversion(1 / 60)

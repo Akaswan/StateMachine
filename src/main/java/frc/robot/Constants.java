@@ -170,7 +170,7 @@ public final class Constants {
 
     public static final ArrayList<Double> kSnakeEffectBlueprint =
         new ArrayList<>(Arrays.asList(1.0, 1.0, 1.0, 1.0, 1.0));
-    
+
     public static final RGB kTeal = new RGB(0, 122, 133);
     public static final RGB kRed = new RGB(255, 0, 0);
     public static final RGB kGreen = new RGB(0, 255, 0);

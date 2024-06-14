@@ -1,8 +1,8 @@
 package frc.lib.templates.motors;
 
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.SparkPIDController.ArbFFUnits;
@@ -15,9 +15,9 @@ import frc.lib.templates.subsystems.PositionSubsystem.PositionSubsystemState;
 import frc.lib.templates.subsystems.SubsystemConstants.MotorConstants;
 import java.util.function.Supplier;
 
-public class SubsystemSparkMax implements SubsystemMotor {
+public class SubsystemSparkFlex implements SubsystemMotor {
 
-  private CANSparkMax m_motor;
+  private CANSparkFlex m_motor;
   private RelativeEncoder m_encoder;
   private SparkPIDController m_pidController;
 
@@ -31,7 +31,7 @@ public class SubsystemSparkMax implements SubsystemMotor {
 
     m_feedForward = feedForward;
 
-    m_motor = new CANSparkMax(m_constants.kID, m_constants.kMotorType);
+    m_motor = new CANSparkFlex(m_constants.kID, m_constants.kMotorType);
     m_encoder = m_motor.getEncoder();
     m_pidController = m_motor.getPIDController();
 
@@ -59,12 +59,11 @@ public class SubsystemSparkMax implements SubsystemMotor {
 
   @Override
   public void configureMotor(MotorConstants constants, Object followMotor) {
-    configureMotor(constants, () -> 0.0);
-    m_motor.follow((CANSparkMax) m_motor, m_constants.kInverted);
+    m_motor.follow((CANSparkFlex) m_motor, m_constants.kInverted);
   }
 
   @Override
-  public CANSparkMax getMotor() {
+  public CANSparkFlex getMotor() {
     return m_motor;
   }
 

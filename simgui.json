@@ -108,6 +108,9 @@
       "AdvantageKit": {
         "RealOutputs": {
           "Arm": {
+            "Arm": {
+              "open": true
+            },
             "open": true
           },
           "Climb Winch": {

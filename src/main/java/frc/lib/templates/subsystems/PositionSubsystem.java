@@ -4,18 +4,14 @@
 
 package frc.lib.templates.subsystems;
 
-import com.revrobotics.CANSparkBase;
-import com.revrobotics.CANSparkFlex;
-import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
-import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.templates.motors.SubsystemMotor;
+import frc.lib.templates.motors.SubsystemSparkFlex;
 import frc.lib.templates.motors.SubsystemSparkMax;
-import frc.lib.templates.subsystems.SubsystemConstants.MotorControllerType;
 import frc.lib.templates.subsystems.SubsystemConstants.PositionSubsystemConstants;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
@@ -27,13 +23,13 @@ public abstract class PositionSubsystem extends SubsystemBase {
   public PositionSubsystemConstants m_constants;
 
   protected final SubsystemMotor m_leader;
-  protected final CANSparkBase[] m_followers;
+  protected final SubsystemMotor[] m_followers;
 
   protected TrapezoidProfile m_profile;
   protected TrapezoidProfile.State m_profileStartSetpoint;
 
-  protected SubsystemState m_currentState = null;
-  protected SubsystemState m_desiredState = null;
+  protected PositionSubsystemState m_currentState = null;
+  protected PositionSubsystemState m_desiredState = null;
 
   protected double m_arbFeedforward = 0;
 
@@ -46,7 +42,7 @@ public abstract class PositionSubsystem extends SubsystemBase {
 
     switch (m_constants.kLeaderConstants.kMotorControllerType) {
       case SPARK_FLEX:
-        m_leader = new SubsystemSparkMax();
+        m_leader = new SubsystemSparkFlex();
         break;
       case SPARK_MAX:
         m_leader = new SubsystemSparkMax();
@@ -55,53 +51,42 @@ public abstract class PositionSubsystem extends SubsystemBase {
         m_leader = new SubsystemSparkMax();
         break;
       default:
-        throw new Error("No Motor Configured For The " + m_constants.kSubsystemName + " Subsystem");
+        throw new Error(
+            "No Leader Motor Configured For The " + m_constants.kSubsystemName + " Subsystem");
     }
 
-    m_leader.configureMotor(
-        constants.kLeaderConstants, this::getDesiredState, this::getFeedForward);
+    m_leader.configureMotor(constants.kLeaderConstants, this::getFeedForward);
 
     if (m_constants.kFollowerConstants.length > 0) {
-      if (m_constants.kFollowerConstants[0].kMotorControllerType == MotorControllerType.SPARK_MAX) {
-        m_followers = new CANSparkMax[m_constants.kFollowerConstants.length];
-      } else {
-        m_followers = new CANSparkFlex[m_constants.kFollowerConstants.length];
+      switch (m_constants.kLeaderConstants.kMotorControllerType) {
+        case SPARK_FLEX:
+          m_followers = new SubsystemSparkFlex[m_constants.kFollowerConstants.length];
+          for (int i = 0; i < m_constants.kFollowerConstants.length; i++) {
+            m_followers[i] = new SubsystemSparkFlex();
+            m_followers[i].configureMotor(m_constants.kFollowerConstants[i], m_leader.getMotor());
+          }
+          break;
+        case SPARK_MAX:
+          m_followers = new SubsystemSparkMax[m_constants.kFollowerConstants.length];
+          for (int i = 0; i < m_constants.kFollowerConstants.length; i++) {
+            m_followers[i] = new SubsystemSparkMax();
+            m_followers[i].configureMotor(m_constants.kFollowerConstants[i], m_leader.getMotor());
+          }
+          break;
+        case TALON_FX:
+          m_followers = new SubsystemSparkMax[m_constants.kFollowerConstants.length];
+          break;
+        default:
+          throw new Error(
+              "No Follower Motor Configured For The " + m_constants.kSubsystemName + " Subsystem");
       }
     } else {
-      m_followers = new CANSparkBase[0];
-    }
-
-    for (int i = 0; i < m_constants.kFollowerConstants.length; i++) {
-      if (m_constants.kFollowerConstants[0].kMotorControllerType == MotorControllerType.SPARK_MAX) {
-        m_followers[i] =
-            new CANSparkMax(
-                m_constants.kFollowerConstants[i].kID,
-                m_constants.kFollowerConstants[i].kMotorType);
-      } else {
-        m_followers[i] =
-            new CANSparkFlex(
-                m_constants.kFollowerConstants[i].kID,
-                m_constants.kFollowerConstants[i].kMotorType);
-      }
-
-      m_followers[i].setIdleMode(m_constants.kFollowerConstants[i].kIdleMode);
-      m_followers[i].setSmartCurrentLimit(m_constants.kFollowerConstants[i].kCurrentLimit);
-      // m_followers[i].follow(m_leader, m_constants.kFollowerConstants[i].kInverted);
-
-      m_followers[i].setPeriodicFramePeriod(PeriodicFrame.kStatus0, 100);
-      m_followers[i].setPeriodicFramePeriod(PeriodicFrame.kStatus1, 65534);
-      m_followers[i].setPeriodicFramePeriod(PeriodicFrame.kStatus2, 65534);
-      m_followers[i].setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65534);
-      m_followers[i].setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65534);
-      m_followers[i].setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65534);
-      m_followers[i].setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65534);
-
-      m_followers[i].burnFlash();
+      m_followers = new SubsystemMotor[0];
     }
 
     m_profile = new TrapezoidProfile(m_constants.kProfileConstraints);
 
-    m_leader.runToPosition();
+    m_leader.runToPosition(m_currentState.getPosition());
 
     setName(m_constants.kSubsystemName);
   }
@@ -137,6 +122,8 @@ public abstract class PositionSubsystem extends SubsystemBase {
 
     m_throttle = MathUtil.applyDeadband(m_throttle, m_constants.kManualDeadBand);
 
+    m_leader.setVoltage(m_throttle);
+
     if (Math.abs(m_throttle) > 0) {
       if (m_currentState != BuiltInPositionSubsystemState.MANUAL)
         BuiltInPositionSubsystemState.MANUAL.setPosition(getPosition());
@@ -154,16 +141,16 @@ public abstract class PositionSubsystem extends SubsystemBase {
 
       if (intendedPosition != BuiltInPositionSubsystemState.MANUAL.getPosition()) {
         BuiltInPositionSubsystemState.MANUAL.setPosition(intendedPosition);
-        m_leader.runToPosition();
+        m_leader.runToPosition(BuiltInPositionSubsystemState.MANUAL.getPosition());
       }
     }
   }
 
-  public SubsystemState getCurrentState() {
+  public PositionSubsystemState getCurrentState() {
     return m_currentState;
   }
 
-  public SubsystemState getDesiredState() {
+  public PositionSubsystemState getDesiredState() {
     return m_desiredState;
   }
 
@@ -175,7 +162,7 @@ public abstract class PositionSubsystem extends SubsystemBase {
     return m_arbFeedforward;
   }
 
-  public void setDesiredState(SubsystemState desiredState) {
+  public void setDesiredState(PositionSubsystemState desiredState) {
     m_profileStartSetpoint = m_currentState.getSetpoint();
 
     if (m_currentState == BuiltInPositionSubsystemState.MANUAL) {
@@ -187,7 +174,7 @@ public abstract class PositionSubsystem extends SubsystemBase {
     m_desiredState = desiredState;
   }
 
-  public Command moveWithProfile(SubsystemState desiredState, PositionSubsystem subsystem) {
+  public Command moveWithProfile(PositionSubsystemState desiredState, PositionSubsystem subsystem) {
     return m_leader.runToPositionWithProfile(
         m_profile,
         BuiltInPositionSubsystemState.TRANSITION,
@@ -255,7 +242,7 @@ public abstract class PositionSubsystem extends SubsystemBase {
 
   public abstract void outputTelemetry();
 
-  public enum BuiltInPositionSubsystemState implements SubsystemState {
+  public enum BuiltInPositionSubsystemState implements PositionSubsystemState {
     TRANSITION,
     MANUAL;
 
@@ -301,21 +288,9 @@ public abstract class PositionSubsystem extends SubsystemBase {
     public void setVelocity(double velocity) {
       state.velocity = velocity;
     }
-
-    @Override
-    public double getVoltage() {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'getVoltage'");
-    }
-
-    @Override
-    public void setVoltage(double voltage) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'setVoltage'");
-    }
   }
 
-  public interface SubsystemState {
+  public interface PositionSubsystemState {
     String getName();
 
     TrapezoidProfile.State getSetpoint();
@@ -329,10 +304,6 @@ public abstract class PositionSubsystem extends SubsystemBase {
     double getVelocity();
 
     void setVelocity(double velocity);
-
-    double getVoltage();
-
-    void setVoltage(double voltage);
   }
 }
 

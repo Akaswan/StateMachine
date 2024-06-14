@@ -5,7 +5,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.lib.templates.subsystems.MultiMotorPositionSubsystem.MultiMotorPositionSubsystemState;
 import frc.lib.templates.subsystems.MultiMotorPositionSubsystem.MultiMotorPositionSubsystemType;
-import frc.lib.templates.subsystems.PositionSubsystem.SubsystemState;
+import frc.lib.templates.subsystems.PositionSubsystem.PositionSubsystemState;
 import frc.lib.templates.subsystems.VelocitySubsystem.VelocitySubsystemState;
 import frc.lib.templates.subsystems.VelocitySubsystem.VelocitySubsystemType;
 import frc.lib.templates.subsystems.VoltageSubsystem.VoltageSubsystemState;
@@ -46,7 +46,7 @@ public class SubsystemConstants {
     public MotorConstants kLeaderConstants = new MotorConstants();
     public MotorConstants[] kFollowerConstants = new MotorConstants[0];
 
-    public SubsystemState kInitialState = null;
+    public PositionSubsystemState kInitialState = null;
 
     public double kSetpointTolerance = 0.0; // Tolerance for atSetpoint()
 

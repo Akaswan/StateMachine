@@ -4,29 +4,32 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.util.function.BooleanConsumer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.templates.subsystems.PositionSubsystem;
-import frc.lib.templates.subsystems.PositionSubsystem.SubsystemState;
+import frc.lib.templates.subsystems.PositionSubsystem.PositionSubsystemState;
 import frc.lib.templates.subsystems.SubsystemConstants.MotorConstants;
 import java.util.function.Supplier;
 
 public interface SubsystemMotor {
-  void configureMotor(
-      MotorConstants constants,
-      Supplier<SubsystemState> desiredState,
-      Supplier<Double> feedForward);
+  void configureMotor(MotorConstants constants, Supplier<Double> feedForward);
+
+  void configureMotor(MotorConstants constants, Object followMotor);
 
   double getPostion();
 
   double getVelocity();
 
-  void runToPosition();
+  void setVoltage(double voltage);
 
-  void runToVelocity();
+  void runToPosition(double position);
+
+  void runToVelocity(double velocity);
+
+  Object getMotor();
 
   Command runToPositionWithProfile(
       TrapezoidProfile profile,
-      SubsystemState transitionState,
+      PositionSubsystemState transitionState,
       Supplier<TrapezoidProfile.State> profileStartSetpoint,
-      SubsystemState desiredState,
+      PositionSubsystemState desiredState,
       Supplier<Boolean> isAtSetpoint,
       Runnable preCommand,
       BooleanConsumer postCommand,

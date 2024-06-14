@@ -1,7 +1,7 @@
 package frc.lib.templates.builders;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import frc.lib.templates.subsystems.PositionSubsystem.SubsystemState;
+import frc.lib.templates.subsystems.PositionSubsystem.PositionSubsystemState;
 import frc.lib.templates.subsystems.SubsystemConstants.ManualControlMode;
 import frc.lib.templates.subsystems.SubsystemConstants.MotorConstants;
 import frc.lib.templates.subsystems.SubsystemConstants.PositionSubsystemConstants;
@@ -33,7 +33,7 @@ public class PositionSubsystemConstantsBuilder {
     return this;
   }
 
-  public PositionSubsystemConstantsBuilder withInitialState(SubsystemState state) {
+  public PositionSubsystemConstantsBuilder withInitialState(PositionSubsystemState state) {
     constants.kInitialState = state;
     return this;
   }
