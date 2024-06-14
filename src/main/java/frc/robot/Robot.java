@@ -1,4 +1,4 @@
-// Copyright 2021-2023 FRC 6328
+// Copyright 2021-2024 FRC 6328
 // http://github.com/Mechanical-Advantage
 //
 // This program is free software; you can redistribute it and/or
@@ -13,17 +13,12 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.SignalLogger;
-import com.pathplanner.lib.commands.FollowPathCommand;
-import edu.wpi.first.net.PortForwarder;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 /**
@@ -33,70 +28,93 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  * project.
  */
 public class Robot extends LoggedRobot {
-  private Command m_autonomousCommand;
-
-  private RobotContainer m_robotContainer;
-
-  boolean autonInitCommandRun = false;
+  private static final String defaultAuto = "Default";
+  private static final String customAuto = "My Auto";
+  private String autoSelected;
+  private final LoggedDashboardChooser<String> chooser =
+      new LoggedDashboardChooser<>("Auto Choices");
 
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
-  @SuppressWarnings("resource")
   public void robotInit() {
-
-    Logger.recordMetadata("ProjectName", "StateMachine"); // Set a metadata value
-
-    if (isReal()) {
-      Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
-      new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
+    // Record metadata
+    Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+    Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+    Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+    Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+    Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+    switch (BuildConstants.DIRTY) {
+      case 0:
+        Logger.recordMetadata("GitDirty", "All changes committed");
+        break;
+      case 1:
+        Logger.recordMetadata("GitDirty", "Uncomitted changes");
+        break;
+      default:
+        Logger.recordMetadata("GitDirty", "Unknown");
+        break;
     }
 
-    Logger.addDataReceiver(new NT4Publisher());
+    // Set up data receivers & replay source
+    switch (Constants.currentMode) {
+      case REAL:
+        // Running on a real robot, log to a USB stick ("/U/logs")
+        Logger.addDataReceiver(new WPILOGWriter());
+        Logger.addDataReceiver(new NT4Publisher());
+        break;
 
-    // Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in the
-    // "Understanding Data Flow" page
-    Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may
-    // be added.
+      case SIM:
+        // Running a physics simulator, log to NT
+        Logger.addDataReceiver(new NT4Publisher());
+        break;
 
-    m_robotContainer = new RobotContainer();
-
-    for (int port = 5800; port <= 5807; port++) {
-      PortForwarder.add(port, "limelight.local", port);
+      case REPLAY:
+        // Replaying a log, set up replay source
+        setUseTiming(false); // Run as fast as possible
+        String logPath = LogFileUtil.findReplayLog();
+        Logger.setReplaySource(new WPILOGReader(logPath));
+        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+        break;
     }
 
-    SignalLogger.enableAutoLogging(false);
+    // See http://bit.ly/3YIzFZ6 for more information on timestamps in AdvantageKit.
+    // Logger.disableDeterministicTimestamps()
 
-    // Command disabledCommand = new PathPlannerAuto("Dummy-Auto-Fix-Auto").ignoringDisable(true);
-    // disabledCommand.schedule();
-    // Timer.delay(1);
-    // disabledCommand.cancel();
+    // Start AdvantageKit logger
+    Logger.start();
+
+    // Initialize auto chooser
+    chooser.addDefaultOption("Default Auto", defaultAuto);
+    chooser.addOption("My Auto", customAuto);
   }
 
   /** This function is called periodically during all modes. */
   @Override
-  public void robotPeriodic() {
-    CommandScheduler.getInstance().run();
-  }
+  public void robotPeriodic() {}
 
   /** This function is called once when autonomous is enabled. */
   @Override
   public void autonomousInit() {
-
-    m_autonomousCommand = new WaitCommand(0.01).andThen(m_robotContainer.getAutonomousCommand());
-
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-
-      m_autonomousCommand.schedule();
-    }
+    autoSelected = chooser.get();
+    System.out.println("Auto selected: " + autoSelected);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    switch (autoSelected) {
+      case customAuto:
+        // Put custom auto code here
+        break;
+      case defaultAuto:
+      default:
+        // Put default auto code here
+        break;
+    }
+  }
 
   /** This function is called once when teleop is enabled. */
   @Override
@@ -108,15 +126,7 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once when the robot is disabled. */
   @Override
-  public void disabledInit() {
-
-    if (autonInitCommandRun == false) {
-      Command autonInitCommand = FollowPathCommand.warmupCommand();
-      // new PathPlannerAuto("1 Meter Auto").ignoringDisable(true);
-      autonInitCommand.schedule();
-      autonInitCommandRun = true;
-    }
-  }
+  public void disabledInit() {}
 
   /** This function is called periodically when disabled. */
   @Override
