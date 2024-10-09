@@ -10,7 +10,18 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.SubsystemStateManager;
+import frc.robot.subsystems.SubsystemStateManager.RobotState;
+import frc.robot.subsystems.amper.AmperElevator;
+import frc.robot.subsystems.amper.AmperWheels;
+import frc.robot.subsystems.climber.ClimberWinch;
+import frc.robot.subsystems.intake.IntakeWheels;
+import frc.robot.subsystems.intake.IntakeWrist;
+import frc.robot.subsystems.intake.TransferWheels;
+import frc.robot.subsystems.launcher.LauncherFlywheels;
+import frc.robot.subsystems.launcher.LauncherPivot;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /*
@@ -26,6 +37,16 @@ public class RobotContainer {
 
   // SHUFFLEBOARD TABS \\
   public static ShuffleboardTab m_mainTab = Shuffleboard.getTab("Main");
+
+  // SUBSYSTEMS \\
+  private final IntakeWrist m_intakeWrist = new IntakeWrist();
+  private final AmperElevator m_amperElevator = new AmperElevator();
+  private final TransferWheels m_transferWheels = new TransferWheels();
+  private final ClimberWinch m_climberWinch = new ClimberWinch();
+  private final LauncherPivot m_launcherPivot = new LauncherPivot();
+  private final AmperWheels m_amperWheels = new AmperWheels();
+  private final IntakeWheels m_intakeWheels = new IntakeWheels();
+  private final LauncherFlywheels m_launcherFlywheels = new LauncherFlywheels();
 
   // SENDABLE CHOOSER \\
   public static LoggedDashboardChooser<Command> autoChooser;
@@ -49,7 +70,18 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    m_driverController
+        .a()
+        .onTrue(SubsystemStateManager.intake(m_intakeWrist, m_intakeWheels, m_transferWheels));
+    m_driverController
+        .b()
+        .onTrue(SubsystemStateManager.stow(m_intakeWrist, m_intakeWheels, m_transferWheels));
+
+    new Trigger(() -> SubsystemStateManager.getCurrentState() == RobotState.INTAKING)
+        .and(m_transferWheels::getIsNoteInTransfer)
+        .onTrue(SubsystemStateManager.stow(m_intakeWrist, m_intakeWheels, m_transferWheels));
+  }
 
   public Command getAutonomousCommand() {
     return autoChooser.get();

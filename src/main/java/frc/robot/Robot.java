@@ -13,8 +13,11 @@
 
 package frc.robot;
 
+import com.revrobotics.REVPhysicsSim;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.subsystems.SubsystemStateManager;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -30,6 +33,9 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  */
 public class Robot extends LoggedRobot {
   private RobotContainer m_robotContainer;
+
+  @SuppressWarnings("unused")
+  private SubsystemStateManager m_stateManager;
 
   private Command m_autonomousCommand;
 
@@ -86,11 +92,15 @@ public class Robot extends LoggedRobot {
     Logger.start();
 
     m_robotContainer = new RobotContainer();
+    m_stateManager = new SubsystemStateManager();
   }
 
   /** This function is called periodically during all modes. */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    CommandScheduler.getInstance().run();
+    REVPhysicsSim.getInstance().run();
+  }
 
   /** This function is called once when autonomous is enabled. */
   @Override
@@ -102,8 +112,6 @@ public class Robot extends LoggedRobot {
 
       m_autonomousCommand.schedule();
     }
-
-    System.out.println(m_robotContainer.getAutonomousCommand().getName());
   }
 
   /** This function is called periodically during autonomous. */
